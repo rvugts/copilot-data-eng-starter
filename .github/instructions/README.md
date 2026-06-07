@@ -1,10 +1,10 @@
 # GitHub Copilot Custom Instructions
 
-This directory contains language-specific and workflow-specific custom instructions for GitHub Copilot. These instructions guide Copilot's responses and code generation to follow your project's conventions and best practices.
+This directory contains path-specific custom instructions for GitHub Copilot. These instructions guide Copilot's responses and code generation to follow your project's conventions and best practices.
 
 ## What Are Custom Instructions?
 
-Custom instructions are files that provide Copilot with additional context and guidance on how to work with your codebase. They're similar to Cursor's `.mdc` rules but use GitHub's custom instructions format with glob patterns via YAML frontmatter.
+Custom instructions are files that provide Copilot with additional context and guidance on how to work with your codebase. They use GitHub's custom instructions format with glob patterns via YAML frontmatter.
 
 **Copilot automatically applies relevant instructions based on the file you're working on.**
 
@@ -13,16 +13,11 @@ Custom instructions are files that provide Copilot with additional context and g
 ```
 .github/instructions/
 ├── python/
-│   ├── python-general.instructions.md       # General Python best practices
-│   ├── python-fastapi.instructions.md       # FastAPI-specific guidelines
-│   └── python-django.instructions.md        # Django-specific guidelines
+│   └── python-general.instructions.md       # TDD, SSD, quality, tooling, data-eng conventions
 ├── databricks/
 │   └── databricks.instructions.md           # PySpark, Delta Lake, Unity Catalog standards
 ├── dbt/
 │   └── dbt-sql.instructions.md              # dbt & SQL development standards
-├── javascript/
-│   ├── react.instructions.md                # React/TypeScript best practices
-│   └── nodejs.instructions.md               # Node.js backend best practices
 └── workflows/
     └── tdd.instructions.md                  # Test-Driven Development workflow
 ```
@@ -46,9 +41,9 @@ Each `.instructions.md` file contains:
 | Pattern | Matches |
 |---------|---------|
 | `**/*.py` | All Python files in all directories |
-| `**/*.jsx,**/*.tsx` | JSX and TSX files |
-| `**/fastapi/**/*.py` | Python files in FastAPI directories |
 | `**/*.sql` | All SQL files (e.g. dbt models) |
+| `**/schema.yml` | dbt schema files |
+| `models/**/*.yml` | YAML files inside dbt model directories |
 
 ## Available Instructions
 
@@ -59,64 +54,14 @@ Applies to: All `.py` files
 
 Covers:
 - Test-Driven Development (TDD) with pytest
-- Spec-Driven Development (SSD)
-- Type hints and annotations
-- Code structure and formatting
-- Import organization
-- Naming conventions
-- Documentation standards
+- Spec-Driven Development (SDD)
+- Type hints, Pydantic validation, and pydantic-settings
+- Code structure, naming, imports, and formatting
+- Error handling, logging, and secrets management
+- Data engineering conventions (pathlib, pure transforms, reproducibility)
+- Tooling alignment (black, flake8, pylint, pyright, pytest)
 - Security best practices
-
-#### [python-fastapi.instructions.md](python/python-fastapi.instructions.md)
-Applies to: Python files in FastAPI projects
-
-Covers:
-- FastAPI architecture and best practices
-- Async/await patterns
-- Pydantic model validation
-- Dependency injection
-- API documentation and OpenAPI
-- Performance optimization
-- Security (CORS, authentication, rate limiting)
-
-#### [python-django.instructions.md](python/python-django.instructions.md)
-Applies to: Python files in Django projects
-
-Covers:
-- Django models, views, and templates
-- Class-Based Views (CBVs)
-- Authentication and authorization
-- Database optimization (select_related, prefetch_related)
-- Testing strategies
-- Performance and caching
-- Security practices
-
-### JavaScript Instructions
-
-#### [react.instructions.md](javascript/react.instructions.md)
-Applies to: `.jsx` and `.tsx` files
-
-Covers:
-- React component structure
-- TypeScript integration
-- Import organization
-- Naming conventions
-- React hooks best practices
-- Performance optimization
-- Accessibility (a11y)
-- Testing with React Testing Library
-
-#### [nodejs.instructions.md](javascript/nodejs.instructions.md)
-Applies to: `.js` and `.ts` files (Node.js backend)
-
-Covers:
-- Code structure and formatting
-- Error handling
-- Async/await patterns
-- TypeScript usage
-- API design (RESTful)
-- Database practices
-- Security best practices
+- Verification checklist
 
 ### Databricks Instructions
 
@@ -138,7 +83,7 @@ Covers:
 #### [dbt-sql.instructions.md](dbt/dbt-sql.instructions.md)
 Applies to: All `.sql` files; `schema.yml`, `sources.yml`, `dbt_project.yml`; YAML files inside `models/`, `macros/`, `seeds/`, `snapshots/`, and `analyses/` directories.
 
-> **Note on YAML scope:** The `applyTo` pattern deliberately excludes `**/*.yml` to avoid applying dbt rules to unrelated YAML files (GitHub Actions workflows, Docker Compose, Kubernetes manifests, etc.). Only well-known dbt filenames (`schema.yml`, `sources.yml`, `dbt_project.yml`) and YAML files nested inside standard dbt directories are targeted.
+> **Note on YAML scope:** The `applyTo` pattern deliberately excludes `**/*.yml` to avoid applying dbt rules to unrelated YAML files (GitHub Actions workflows, Docker Compose, etc.). Only well-known dbt filenames and YAML files nested inside standard dbt directories are targeted.
 
 Covers:
 - SQL style (lowercase keywords, trailing commas, CTEs over subqueries)
@@ -179,14 +124,7 @@ When using Copilot Chat, relevant instructions are automatically included in you
 
 ### Enabling/Disabling
 
-Custom instructions are **enabled by default** for:
-- Copilot code generation
-- Copilot Chat
-- Copilot code review
-
-You can disable them in repository settings if needed:
-1. Go to Settings > Copilot > Code review
-2. Toggle "Use custom instructions when reviewing pull requests"
+Custom instructions are **enabled by default** for Copilot code generation, Copilot Chat, and Copilot code review.
 
 ## Creating/Modifying Instructions
 
@@ -206,46 +144,42 @@ You can disable them in repository settings if needed:
 
 - **Conciseness:** Keep instructions focused and actionable
 - **Specificity:** Be specific about expectations and patterns
-- **Language:** Use natural language; Copilot understands conversational guidance
 - **Examples:** Include code examples when helpful
-- **Prioritization:** Order guidelines by importance
-- **Avoid Conflicts:** Try not to have conflicting instructions for the same file type
+- **Avoid Conflicts:** Don't have conflicting instructions for the same file type
 
 ## Instruction Priorities
 
 When multiple instruction files apply, they're all used together:
 1. **Path-specific instructions** (most specific pattern)
-2. **Repository-wide instructions** (if a `copilot-instructions.md` exists in `.github/`)
+2. **Repository-wide instructions** (`.github/copilot-instructions.md`)
 3. **Organization-wide instructions** (if configured)
 
 ## Examples in Action
 
-### Example 1: Python File
+### Example 1: Python Utility
 
-When working on `src/services/user_service.py`, Copilot applies:
+When working on `src/utils/transform.py`, Copilot applies:
 - ✅ `python/python-general.instructions.md` (matches `**/*.py`)
 - ✅ `workflows/tdd.instructions.md` (matches `**/*.py`)
 
-### Example 2: React Component
+### Example 2: dbt Staging Model
 
-When working on `src/components/UserProfile.tsx`, Copilot applies:
-- ✅ `javascript/react.instructions.md` (matches `**/*.tsx`)
-
-### Example 3: FastAPI Route
-
-When working on `app/routers/users.py`, Copilot applies:
-- ✅ `python/python-general.instructions.md` (matches `**/*.py`)
-- ✅ `python/python-fastapi.instructions.md` (matches `**/fastapi/**/*.py`)
-- ✅ `workflows/tdd.instructions.md` (matches `**/*.py`)
-
-### Example 4: dbt Model
-
-When working on `models/staging/stg_claims.sql`, Copilot applies:
+When working on `models/staging/stg_orders.sql`, Copilot applies:
 - ✅ `dbt/dbt-sql.instructions.md` (matches `**/*.sql`)
 
 When working on `models/staging/schema.yml`, Copilot applies:
 - ✅ `dbt/dbt-sql.instructions.md` (matches `**/schema.yml`)
-- ❌ `dbt/dbt-sql.instructions.md` does NOT apply to `.github/workflows/ci.yml` (not in a dbt directory and not a named dbt file)
+
+### Example 3: PySpark Job Script
+
+When working on `jobs/ingest_orders.py`, Copilot applies:
+- ✅ `python/python-general.instructions.md` (matches `**/*.py`)
+- ✅ `databricks/databricks.instructions.md` (matches `**/*.py`)
+- ✅ `workflows/tdd.instructions.md` (matches `**/*.py`)
+
+## Agent Skills
+
+For multi-step workflows (building dbt models, deploying Databricks jobs, creating specs), use **Agent Skills** in `.agents/skills/`. Skills are invoked on demand with `/skill-name` in Copilot Chat. See `.agents/skills/README.md`.
 
 ## Troubleshooting
 
@@ -256,9 +190,8 @@ When working on `models/staging/schema.yml`, Copilot applies:
 **Solutions:**
 1. Ensure the `.instructions.md` file exists in `.github/instructions/`
 2. Check that the `applyTo` glob pattern matches your file
-3. File must be in the context (attached to chat or open in editor)
-4. Wait up to 1 minute for changes to propagate
-5. Reload VS Code if changes don't appear
+3. File must be in context (attached to chat or open in editor)
+4. Reload VS Code if changes don't appear
 
 ### Conflicting Instructions
 
@@ -266,25 +199,11 @@ When working on `models/staging/schema.yml`, Copilot applies:
 
 **Solutions:**
 1. Review both instruction files for conflicts
-2. Specify more specific `applyTo` patterns
+2. Use more specific `applyTo` patterns
 3. Consider merging related instructions
-4. Use specific patterns to prevent overlap
 
 ## Further Resources
 
 - [GitHub Docs: Custom Instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
-- [Copilot Customization Library](https://github.com/github/copilot-docs/tree/main/docs/custom-instructions)
 - [Agent Skills Specification](https://agentskills.io/specification)
-
-## Migration from Cursor
-
-If migrating from Cursor's `.mdc` rules:
-
-| Cursor | Copilot |
-|--------|---------|
-| `.cursor/rules/` | `.github/instructions/` |
-| `.mdc` files | `.instructions.md` files |
-| `globs` frontmatter | `applyTo` frontmatter |
-| File path pattern | Glob pattern in `applyTo` |
-
-All instruction content remains largely the same; only the format and location change.
+- [Agent Skills in this repo](../../.agents/skills/README.md)

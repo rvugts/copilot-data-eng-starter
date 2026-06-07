@@ -11,11 +11,7 @@ Thumbs.db
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
-!.vscode/settings.python.json
-!.vscode/extensions.python.json
-!.vscode/settings.terraform.json
-!.vscode/extensions.terraform.json
-!.vscode/merge-configs.py
+!.vscode/mcp.json
 !.vscode/README.md
 *.code-workspace
 .idea/
@@ -56,9 +52,6 @@ ENV/
 # Node
 node_modules/
 .pnpm-debug.log*
-
-# Prompts
-prompts/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -105,17 +98,6 @@ logs/
 *.sqlite
 *.sqlite3
 
-# Terraform
-*.tfstate
-*.tfstate.*
-.terraform/
-.terraform.lock.hcl
-crash.log
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
-
 # Generated / temporary
 *.tmp
 *.temp
@@ -127,4 +109,3 @@ override.tf.json
 # MCP Server configs (may contain secrets)
 mcp-servers/*/config.json
 !mcp-servers/*/config-examples/*
-

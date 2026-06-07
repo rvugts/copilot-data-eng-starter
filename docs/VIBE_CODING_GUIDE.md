@@ -159,8 +159,9 @@ Finally, refactor for better structure (Refactor phase)."
 
 #### For SDD
 ```
-"@docs/specs/spec.md says the user authentication must support OAuth2.
-Create the implementation following this spec and python-django.instructions.md."
+"@docs/specs/spec.md requires staging models for the orders source with not_null
+and unique tests on order_id. Create the dbt model and schema.yml following
+dbt-sql.instructions.md."
 ```
 
 #### For Refactoring
@@ -385,13 +386,8 @@ You can combine skills for powerful workflows:
 
 #### Setup
 ```bash
-# Enable Python environment
-bash scripts/enable-python.sh
-
-# Activate virtual environment
+make install
 source venv/bin/activate
-
-# View available commands
 make help
 ```
 
@@ -438,12 +434,13 @@ git clone https://github.com/your-username/copilot-data-eng-starter.git
 cd copilot-data-eng-starter
 ```
 
-### 2. Choose Your Path
+### 2. Set Up Your Environment
 
-#### For Python Projects
+#### Python (included by default)
 ```bash
-bash scripts/enable-python.sh
-# Develop following TDD workflow
+make install
+source venv/bin/activate
+make test
 ```
 
 #### For dbt Projects

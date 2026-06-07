@@ -1,0 +1,47 @@
+# Pre-commit hooks — install with: make install-hooks (or make install)
+# Run manually: make pre-commit
+
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        files: ^(src|tests|scripts)/
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        files: ^(src|tests|scripts)/
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        exclude: package-lock.json
+
+  - repo: local
+    hooks:
+      - id: pyright
+        name: pyright
+        entry: bash -c 'if [ -x venv/bin/pyright ]; then venv/bin/pyright src/; else pyright src/; fi'
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: pytest
+        name: pytest (≥80% coverage)
+        entry: bash -c 'if [ -x venv/bin/pytest ]; then venv/bin/pytest --cov=src --cov-fail-under=80 --quiet tests/; else pytest --cov=src --cov-fail-under=80 --quiet tests/; fi'
+        language: system
+        pass_filenames: false
+        always_run: true
+
+# Optional dbt hooks (uncomment when a dbt project exists):
+#  - repo: local
+#    hooks:
+#      - id: dbt-parse
+#        name: dbt parse
+#        entry: dbt parse
+#        language: system
+#        files: ^(models|macros|seeds|snapshots|analyses)/
+#        pass_filenames: false

@@ -137,7 +137,6 @@ For detailed rules specific to your language or framework, see:
 - `.github/instructions/python/` - Python projects
 - `.github/instructions/dbt/` - dbt SQL models and tests
 - `.github/instructions/databricks/` - Databricks / PySpark
-- `.github/instructions/javascript/` - JavaScript/TypeScript projects
 - `.github/instructions/workflows/` - Development workflow specifics
 
 The specific instructions will automatically apply based on the file type you're working with.
@@ -175,8 +174,9 @@ and ensure the implementation aligns with @docs/specs/spec.md section 2.1.
 
 ### Specification Reference
 ```
-@docs/specs/spec.md says the user authentication must support OAuth2. 
-Create the implementation following this spec and python-django.instructions.md.
+@docs/specs/spec.md requires staging models for the orders source with not_null
+and unique tests on order_id. Create the dbt model and schema.yml following
+dbt-sql.instructions.md and the /adding-dbt-unit-test skill.
 ```
 
 ### Workflow

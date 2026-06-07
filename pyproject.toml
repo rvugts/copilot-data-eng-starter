@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "copilot-dev-starter"
+name = "copilot-data-eng-starter"
 version = "0.1.0"
 description = "A starter template for Copilot-powered development with SDD and TDD"
 readme = "README.md"
@@ -34,10 +34,12 @@ dev = [
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests"]
+pythonpath = ["."]
 python_files = "test_*.py"
 addopts = "-v --strict-markers --tb=short"
 markers = [
     "slow: marks tests as slow",
+    "unit: marks tests as unit tests",
     "integration: marks tests as integration tests",
 ]
 
@@ -57,7 +59,7 @@ exclude_lines = [
     "if TYPE_CHECKING:",
     "if __name__ == .__main__.:",
 ]
-min_percentage = 80
+fail_under = 80
 
 [tool.black]
 line-length = 100
@@ -89,5 +91,7 @@ max-line-length = 100
 [tool.pyright]
 include = ["src"]
 exclude = ["**/node_modules", "**/__pycache__", "venv", "**/.*"]
+venvPath = "."
+venv = "venv"
 typeCheckingMode = "strict"
 reportMissingTypeStubs = false

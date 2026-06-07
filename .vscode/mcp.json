@@ -1,0 +1,27 @@
+{
+  "servers": {
+    "databricks-sql": {
+      "type": "http",
+      "url": "https://<your-workspace-hostname>/api/2.0/mcp/sql",
+      "headers": {
+        "Authorization": "Bearer ${input:databricksPat}"
+      }
+    },
+    "dbt": {
+      "command": "uvx",
+      "args": ["dbt-mcp"],
+      "env": {
+        "DBT_PROJECT_DIR": "${workspaceFolder}",
+        "DBT_PATH": "dbt"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "databricksPat",
+      "type": "promptString",
+      "description": "Databricks Personal Access Token (or use OAuth — remove headers block; see docs/AI_SETUP.md)",
+      "password": true
+    }
+  ]
+}

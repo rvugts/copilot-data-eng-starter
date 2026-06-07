@@ -45,7 +45,7 @@ Analyze and infer from the description:
 |-----------|---------|
 | **Scope** | Feature vs. full system |
 | **Domain** | Backend / frontend / data / infrastructure / cross-cutting |
-| **Stack** | Python / Node.js / Databricks-PySpark-SQL / multi-language / other |
+| **Stack** | Python / dbt / Databricks-PySpark-SQL / multi-language / other |
 | **Complexity** | Simple / moderate / complex |
 | **Maturity** | Prototype / MVP / production |
 
@@ -71,7 +71,7 @@ Question areas to draw from:
 **Technology Preferences**
 - Language/framework preferences or constraints?
 - For data projects: orchestration tool? (Airflow, Databricks Workflows, Prefect)
-- For APIs: framework preference? (FastAPI, Django, Express, NestJS)
+- For Python utilities: any framework constraints? (stdlib, PySpark, pandas)
 
 **Priorities**
 - What matters most? (Performance, security, time-to-market, maintainability, data quality)
@@ -181,15 +181,14 @@ For simple prototypes, a short explicit “Not applicable” or “Out of scope 
 
 Adapt the spec to the project's technology. Below are defaults — override when the user states preferences.
 
-### Python (API / Backend / General)
+### Python (utilities / orchestration)
 
 | Component | Default | Notes |
 |-----------|---------|-------|
-| Language | Python 3.12+ | Specify minor version |
-| Framework | FastAPI or Django | FastAPI for APIs, Django for full-stack |
-| Testing | pytest | With pytest-cov, pytest-asyncio as needed |
-| Linting | ruff | Replaces flake8, isort, black |
-| Type checking | mypy or pyright | Strict mode preferred |
+| Language | Python 3.11+ | Specify minor version |
+| Testing | pytest | With pytest-cov |
+| Linting | black, flake8, pylint | Per pyproject.toml |
+| Type checking | pyright | Strict mode preferred |
 | Dependency file | `pyproject.toml` + `requirements.txt` | Pin versions |
 
 ### Python (Data / Databricks / PySpark)
@@ -212,7 +211,7 @@ Data-specific spec sections to emphasize:
 - Incremental vs. full refresh strategy
 - Access control (Unity Catalog permissions)
 
-### Node.js / TypeScript
+### Node.js / TypeScript (only when user specifies)
 
 | Component | Default | Notes |
 |-----------|---------|-------|

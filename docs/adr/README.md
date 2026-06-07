@@ -15,15 +15,17 @@ ADRs are permanent records that help team members (and AI agents like Copilot) u
 
 ## Files in This Directory
 
-### Core Architecture
+This starter ships with a template only — no pre-written ADRs. Your team creates ADRs as you make architectural decisions.
 
-- **[ADR-001: Monolithic Backend Architecture](./ADR-001-monolithic-backend-architecture.md)**
-  - Decision to build a single FastAPI monolith rather than microservices
-  - Status: Accepted | Date: 2026-04-07
+- **[adr.template.md](./adr.template.md)** — Copy this to create a new ADR
 
-- **[ADR-002: Async I/O by Default](./ADR-002-async-io-by-default.md)**
-  - Decision to use async/await for all I/O operations
-  - Status: Accepted | Date: 2026-04-07
+## Suggested First ADRs
+
+When bootstrapping a data engineering project from this template, consider documenting these decisions early (titles only — write full ADRs when your team is ready):
+
+1. **Medallion architecture layer naming** — Conventions for `stg_`, `int_`, `fct_`, `dim_`, and `rpt_` prefixes across dbt and Databricks
+2. **dbt as transformation layer of record** — What logic belongs in dbt models vs Databricks notebooks or PySpark jobs
+3. **Unity Catalog as single source of truth** — How table references, schemas, and access control are standardized
 
 ## Creating a New ADR
 
@@ -31,8 +33,8 @@ ADRs are permanent records that help team members (and AI agents like Copilot) u
 
 Create an ADR when:
 - Making a significant architectural decision that affects multiple team members
-- Choosing between competing approaches (monolith vs microservices, sync vs async, etc.)
-- Establishing patterns that will be used repeatedly (testing strategy, API design, etc.)
+- Choosing between competing approaches (batch vs streaming, dbt vs notebook transforms, etc.)
+- Establishing patterns that will be used repeatedly (testing strategy, naming conventions, deployment model)
 - Documenting important constraints or limitations
 
 **Don't** create an ADR for:
@@ -44,12 +46,12 @@ Create an ADR when:
 
 1. **Copy the template:**
    ```bash
-   cp docs/adr/adr.template.md ADR-XXX-short-title.md
+   cp docs/adr/adr.template.md docs/adr/ADR-001-short-title.md
    ```
 
 2. **Find the next ADR number:**
-   - Look at existing ADRs (ADR-001, ADR-002, etc.)
-   - Use next sequential number (e.g., ADR-003)
+   - Look at existing ADRs in this directory
+   - Use the next sequential number (e.g., ADR-002)
 
 3. **Follow the format:**
    - MUST include: Context, Decision, Consequences, Alternatives
@@ -82,33 +84,35 @@ Proposed  →  Accepted  →  Deprecated
 ## Using ADRs as an AI Agent
 
 When working with Copilot:
-- Reference ADRs in your requests: "Per ADR-002, use async I/O"
+- Reference ADRs in your requests: "Per ADR-001, use `stg_` prefix for staging models"
 - Check ADRs before violating architectural decisions
 - If an ADR seems wrong, propose a new ADR (don't silently violate)
 - Link ADRs in code comments for complex decisions
 
-**Example in code:**
-```python
-# ADR-002: Async I/O by Default
-# Use async/await for database operations
-async def get_user(user_id: int) -> User:
-    return await db.users.get(id=user_id)
+**Example in a dbt model:**
+```sql
+-- ADR-001: Medallion layer naming
+-- Staging models use stg_<source>__<entity> per team convention
+select ...
 ```
 
 ## Querying ADRs
 
 Find decisions related to a topic:
 
-**Backend architecture:**
-- ADR-001: Should I build a monolith or microservices? → Monolith
+**Data modeling:**
+- Should transformation logic live in dbt or notebooks? → See your dbt-as-layer-of-record ADR
 
-**Performance & Concurrency:**
-- ADR-002: Should I use async or sync I/O? → Async
+**Naming & organization:**
+- What prefix should staging models use? → See your medallion naming ADR
+
+**Platform & governance:**
+- How do we reference tables across environments? → See your Unity Catalog ADR
 
 **When adding new decisions:**
 - Search existing ADRs first (don't duplicate)
 - Update related ADRs (add cross-references)
-- If new ADR contradicts old one, mark old as "Superseded"
+- If a new ADR contradicts an old one, mark the old as "Superseded"
 
 ## References
 
@@ -119,11 +123,11 @@ Find decisions related to a topic:
 ## Questions?
 
 - Missing or unclear ADR? Open an issue
-- Want to propose new architecture decision? Create a PR with new ADR (Proposed status)
-- Disagree with existing ADR? Discuss in team meeting and propose superseding ADR if needed
+- Want to propose a new architecture decision? Create a PR with a new ADR (Proposed status)
+- Disagree with an existing ADR? Discuss in a team meeting and propose a superseding ADR if needed
 
 ---
 
 **Maintained By:** [Team Lead]
 
-**Last Updated:** 2026-04-07
+**Last Updated:** 2026-06-07

@@ -20,6 +20,9 @@ typing-extensions>=4.7.0
 # Environment management
 python-dotenv>=1.0.0
 
+# Pre-commit hooks
+pre-commit>=3.0.0
+
 # Optional: async testing
 pytest-asyncio>=0.21.0
 

@@ -1,17 +1,25 @@
 # Contributing
 
-Thank you for helping improve this Copilot Vibe Coding project template.
-This repo is intended to provide a reusable starter for Copilot-powered workflows, SDD, and TDD.
+Thank you for helping improve this **Copilot Data Engineering** starter template.
+This repo provides a reusable foundation for Copilot-powered workflows with **dbt**, **Databricks**, **Python**, SDD, and TDD.
 
-**Before contributing, please read `docs/VIBE_CODING_GUIDE.md` for our development philosophy, Copilot usage guidelines, and best practices.**
+**Before contributing, read `docs/VIBE_CODING_GUIDE.md` and `docs/DEVELOPMENT.md`.**
 
 ## Ways to contribute
 
-- Add new templates or workflow docs under `docs/`
-- Add new skills under `.agents/skills/` (Agent Skills standard — works with GitHub Copilot, Cursor, Claude, and more)
-- Improve existing instructions in `.github/instructions/`
-- Fix bugs or improve sample files in the repository root
-- Add example projects or generator scripts that make the template easier to adopt
+- Improve instructions in `.github/instructions/` (dbt, Databricks, Python)
+- Add or update skills in `.agents/skills/` ([Agent Skills](https://agentskills.io) standard)
+- Extend docs under `docs/` (specs, ADRs, troubleshooting)
+- Improve Makefile targets, CI, or pre-commit hooks for data-eng workflows
+
+## Data-eng PR checklist
+
+When contributing dbt or pipeline changes to this template:
+
+- [ ] SQL uses `{{ ref() }}` / `{{ source() }}` in examples
+- [ ] Example specs live in `docs/specs/` (not as active `spec.md` unless intentional)
+- [ ] No secrets in committed files — use `.env.example` for variable names only
+- [ ] `make test` passes; run `make pre-commit` before opening PR
 
 ## Contributions process
 

@@ -7,6 +7,14 @@
         "ms-vscode-remote.remote-containers",
         "ms-vscode-remote.remote-ssh",
         "ms-vscode-remote.remote-wsl",
-        "zhuangtongfa.material-theme"
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-python.pylint",
+        "ms-python.vscode-pytest",
+        "innoverio.vscode-dbt-power-user",
+        "databricks.databricks"
     ]
 }

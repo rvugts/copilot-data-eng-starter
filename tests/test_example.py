@@ -1,353 +1,211 @@
 """
-Example test module demonstrating TDD patterns used in this project.
+Example test module demonstrating TDD patterns for data engineering.
 
-This file shows the expected test structure, fixture usage, and test organization.
-Use this as a reference when writing new tests.
+This file shows fixtures, parametrization, mocking, and pytest marks using
+pipeline naming and configuration utilities from `src.pipeline`.
 
 **Pattern:** Red → Green → Refactor
-1. Red: Write failing test
-2. Green: Implement minimal code to pass
-3. Refactor: Improve while keeping tests passing
 """
 
+from __future__ import annotations
+
+from typing import Any, Dict
+from unittest.mock import Mock, patch
+
 import pytest
-from unittest.mock import Mock, patch, MagicMock
-from typing import List, Dict, Any
 
+from src.pipeline import (
+    ModelLayer,
+    PipelineConfig,
+    build_table_fqn,
+    normalize_column_name,
+    validate_model_name,
+)
 
 # ============================================================================
-# FIXTURES (Reusable test setup)
+# FIXTURES
 # ============================================================================
+
 
 @pytest.fixture
-def sample_user_data() -> Dict[str, Any]:
-    """
-    Provide sample user data for tests.
-    
-    Scope: function (fresh data for each test)
-    """
+def sample_order_row() -> Dict[str, Any]:
+    """Sample raw order record as it might arrive from a source system."""
     return {
-        "id": 1,
-        "email": "user@example.com",
-        "name": "Test User",
-        "is_active": True,
+        "Order ID": "ORD-1001",
+        "Customer Name": "Ada Lovelace",
+        "Order Date": "2026-06-07",
+        "Amount USD": 42.50,
     }
 
 
 @pytest.fixture
-def mock_database() -> Mock:
-    """
-    Mock database connection.
-    
-    Scope: function (isolated per test)
-    """
-    db = Mock()
-    db.query.return_value.filter.return_value.first.return_value = None
-    return db
+def mock_spark_session() -> Mock:
+    """Mock Spark session for unit tests without a Databricks cluster."""
+    session = Mock()
+    session.table.return_value.count.return_value = 0
+    return session
 
 
 @pytest.fixture
-def mock_email_service() -> Mock:
-    """
-    Mock email service for testing without sending real emails.
-    
-    Scope: function (isolated per test)
-    """
-    service = Mock()
-    service.send.return_value = True
-    service.validate.return_value = True
-    return service
+def pipeline_config() -> PipelineConfig:
+    """Default pipeline configuration for staging loads."""
+    return PipelineConfig(catalog="main", schema="analytics", batch_date="2026-06-07")
 
 
 # ============================================================================
-# TEST CLASSES (Organize related tests)
+# MODEL NAMING
 # ============================================================================
 
-class TestUserValidation:
-    """
-    Group of tests for user validation logic.
-    
-    Pattern: One test class per component/module
-    """
-    
-    def test_valid_email_accepted(self, sample_user_data: Dict[str, Any]) -> None:
-        """
-        Test that valid emails are accepted.
-        
-        **Pattern:**
-        - Clear test name following: test_[action]_[expected_result]
-        - Use fixtures for test data
-        - Use type hints
-        - Verify one thing per test
-        """
-        email = sample_user_data["email"]
-        
-        # This would be your actual validation
-        is_valid = "@" in email and "." in email.split("@")[1]
-        
-        assert is_valid is True
-    
-    def test_invalid_email_rejected(self) -> None:
-        """Test that invalid emails are rejected."""
-        email = "invalid-email"
-        
-        is_valid = "@" in email and "." in email.split("@")[1]
-        
-        assert is_valid is False
-    
-    @pytest.mark.parametrize("email,expected", [
-        ("user@example.com", True),
-        ("user.name@example.co.uk", True),
-        ("user+tag@example.com", True),
-        ("invalid", False),
-        ("user@", False),
-        ("@example.com", False),
-    ])
-    def test_email_validation_parametrized(
-        self, email: str, expected: bool
-    ) -> None:
-        """
-        Test multiple email formats with parametrization.
-        
-        **Pattern:** Use @pytest.mark.parametrize for multiple test cases
-        - Reduces code duplication
-        - Makes edge cases explicit
-        - Each case is independent
-        """
-        is_valid = "@" in email and "." in email.split("@")[1]
-        assert is_valid is expected
 
+class TestModelNaming:
+    """Tests for dbt-style model name validation."""
 
-class TestUserService:
-    """Group of tests for user service business logic."""
-    
-    def test_create_user_with_valid_data(
-        self, sample_user_data: Dict[str, Any], mock_database: Mock
-    ) -> None:
-        """
-        Test creating a user with valid data.
-        
-        **Pattern:** Arrange-Act-Assert (AAA)
-        - Arrange: Set up test conditions
-        - Act: Perform action
-        - Assert: Verify results
-        """
-        # Arrange
-        user_data = sample_user_data
-        mock_database.add = Mock()
-        mock_database.commit = Mock()
-        
-        # Act
-        # Mock the create_user function behavior
-        created_user = {**user_data, "id": 1}
-        mock_database.add(created_user)
-        mock_database.commit()
-        
-        # Assert
-        assert mock_database.add.called
-        assert mock_database.commit.called
-    
-    def test_send_welcome_email_on_user_creation(
-        self, sample_user_data: Dict[str, Any], mock_email_service: Mock
-    ) -> None:
-        """
-        Test that welcome email is sent when user is created.
-        
-        **Pattern:** Mock external dependencies
-        - Use unittest.mock for I/O operations
-        - Verify side effects with assert_called_with()
-        """
-        # Arrange
-        email = sample_user_data["email"]
-        
-        # Act
-        mock_email_service.send(
-            to=email,
-            subject="Welcome!",
-            template="welcome"
-        )
-        
-        # Assert
-        mock_email_service.send.assert_called_once_with(
-            to=email,
-            subject="Welcome!",
-            template="welcome"
-        )
-    
-    def test_user_creation_fails_on_duplicate_email(
-        self, sample_user_data: Dict[str, Any], mock_database: Mock
-    ) -> None:
-        """
-        Test that duplicate email creation is prevented.
-        
-        **Pattern:** Test error scenarios
-        - Use pytest.raises() for exceptions
-        - Verify exception message
-        - Ensure service enforces constraints
-        """
-        # Arrange
-        email = sample_user_data["email"]
-        mock_database.query.return_value.filter.return_value.first.return_value = {
-            "email": email
-        }
-        
-        # Act & Assert
-        from builtins import ValueError
-        with pytest.raises(ValueError, match="Email already exists"):
-            # This would call your actual user creation logic
-            # that checks for duplicates
-            if mock_database.query.return_value.filter.return_value.first():
-                raise ValueError("Email already exists")
+    def test_valid_staging_model_accepted(self) -> None:
+        assert validate_model_name("stg_orders") is True
 
+    def test_invalid_model_without_layer_prefix_rejected(self) -> None:
+        assert validate_model_name("orders") is False
 
-class TestDataProcessing:
-    """Group of tests for data processing logic."""
-    
-    def test_process_batch_with_multiple_items(self) -> None:
-        """
-        Test batch processing with multiple items.
-        
-        **Pattern:** Test with realistic data volumes
-        """
-        # Arrange
-        items = [
-            {"id": 1, "name": "Item 1"},
-            {"id": 2, "name": "Item 2"},
-            {"id": 3, "name": "Item 3"},
-        ]
-        
-        # Act
-        processed = [item for item in items if "name" in item]
-        
-        # Assert
-        assert len(processed) == 3
-        assert all("name" in item for item in processed)
-    
-    def test_process_empty_list(self) -> None:
-        """
-        Test edge case: empty input.
-        
-        **Pattern:** Always test edge cases
-        """
-        # Arrange
-        items: List[Dict[str, Any]] = []
-        
-        # Act
-        processed = [item for item in items if "name" in item]
-        
-        # Assert
-        assert len(processed) == 0
-    
-    @pytest.mark.slow  # Mark long-running tests
-    def test_process_large_dataset(self) -> None:
-        """
-        Test performance with large datasets.
-        
-        **Pattern:** Mark slow tests with @pytest.mark.slow
-        Can be skipped in quick test runs: pytest -m "not slow"
-        """
-        # Arrange
-        items = [{"id": i, "name": f"Item {i}"} for i in range(10000)]
-        
-        # Act
-        processed = [item for item in items if "name" in item]
-        
-        # Assert
-        assert len(processed) == 10000
+    @pytest.mark.parametrize(
+        "name,expected",
+        [
+            ("stg_orders", True),
+            ("int_orders_enriched", True),
+            ("fct_orders", True),
+            ("dim_customers", True),
+            ("rpt_daily_orders", True),
+            ("Orders", False),
+            ("stg-orders", False),
+            ("raw_orders", False),
+        ],
+    )
+    def test_model_name_parametrized(self, name: str, expected: bool) -> None:
+        assert validate_model_name(name) is expected
+
+    def test_model_layer_prefixes(self) -> None:
+        assert ModelLayer.STAGING.prefix == "stg_"
 
 
 # ============================================================================
-# FIXTURES WITH SETUP/TEARDOWN (Using yield)
+# COLUMN NORMALIZATION
 # ============================================================================
+
+
+class TestColumnNormalization:
+    """Tests for source-to-warehouse column renaming."""
+
+    def test_normalize_source_column_to_snake_case(self, sample_order_row: Dict[str, Any]) -> None:
+        raw_key = "Order ID"
+        assert normalize_column_name(raw_key) == "order_id"
+        assert raw_key in sample_order_row
+
+    def test_normalize_rejects_empty_label(self) -> None:
+        with pytest.raises(ValueError, match="Invalid column name"):
+            normalize_column_name("   ")
+
+    @pytest.mark.parametrize(
+        "raw,expected",
+        [
+            ("Customer Name", "customer_name"),
+            ("Amount USD", "amount_usd"),
+            ("order_date", "order_date"),
+        ],
+    )
+    def test_normalize_parametrized(self, raw: str, expected: str) -> None:
+        assert normalize_column_name(raw) == expected
+
+
+# ============================================================================
+# PIPELINE CONFIG & TABLE FQN
+# ============================================================================
+
+
+class TestPipelineConfig:
+    """Tests for batch pipeline configuration."""
+
+    def test_staging_table_fqn(self, pipeline_config: PipelineConfig) -> None:
+        assert pipeline_config.staging_table == "main.analytics.stg_orders"
+
+    def test_rejects_catalog_with_dot(self) -> None:
+        with pytest.raises(ValueError, match="must not contain"):
+            PipelineConfig(catalog="main.prod", schema="analytics", batch_date="2026-06-07")
+
+    def test_build_table_fqn_validates_parts(self) -> None:
+        with pytest.raises(ValueError, match="must not contain"):
+            build_table_fqn("main", "analytics.stg", "orders")
+
+
+class TestSparkBatchLoad:
+    """Example of mocking Spark for a staging load."""
+
+    def test_read_source_table(
+        self, mock_spark_session: Mock, pipeline_config: PipelineConfig
+    ) -> None:
+        mock_spark_session.table(pipeline_config.staging_table).count()
+
+        mock_spark_session.table.assert_called_once_with("main.analytics.stg_orders")
+        mock_spark_session.table.return_value.count.assert_called_once()
+
+
+# ============================================================================
+# FIXTURES WITH SETUP/TEARDOWN
+# ============================================================================
+
 
 @pytest.fixture
-def api_client():
-    """
-    Set up and tear down API client.
-    
-    **Pattern:** Use yield for setup/teardown
-    - Code before yield: SETUP
-    - Code after yield: TEARDOWN
-    """
-    # SETUP
+def catalog_client():
+    """Set up and tear down a mocked Unity Catalog client."""
     client = Mock()
-    client.headers = {"Authorization": "Bearer token"}
-    
+    client.list_schemas.return_value = ["analytics", "raw"]
     yield client
-    
-    # TEARDOWN
     client.close()
 
 
-# ============================================================================
-# PARAMETRIZED FIXTURES (Test with multiple configurations)
-# ============================================================================
-
 @pytest.fixture(params=["dev", "prod"])
-def environment(request):
-    """
-    Parametrized fixture to test in multiple environments.
-    
-    **Pattern:** Parametrize fixtures to test multiple configs
-    """
-    return request.param
+def environment(request: pytest.FixtureRequest) -> str:
+    return str(request.param)
 
 
-def test_api_endpoint_in_multiple_environments(environment: str) -> None:
-    """
-    Test API endpoint behavior in different environments.
-    
-    This test will run twice: once with environment="dev", once with "prod"
-    """
+def test_catalog_client_lists_schemas_in_each_environment(
+    catalog_client: Mock, environment: str
+) -> None:
     assert environment in ["dev", "prod"]
+    assert "analytics" in catalog_client.list_schemas()
 
 
 # ============================================================================
-# MARKS FOR TEST ORGANIZATION
+# MARKS & EDGE CASES
 # ============================================================================
+
 
 @pytest.mark.unit
 def test_is_unit_test() -> None:
-    """Mark this as a unit test."""
-    assert True
+    assert validate_model_name("stg_smoke") is True
 
 
 @pytest.mark.integration
 def test_is_integration_test() -> None:
-    """Mark this as an integration test."""
-    assert True
+    assert build_table_fqn("main", "analytics", "stg_orders") == "main.analytics.stg_orders"
+
+
+@pytest.mark.slow
+def test_process_large_batch_of_rows() -> None:
+    rows = [{"order_id": i, "amount_usd": float(i)} for i in range(10_000)]
+    assert len(rows) == 10_000
+    assert all("order_id" in row for row in rows)
 
 
 @pytest.mark.skip(reason="Not implemented yet")
-def test_skipped_feature() -> None:
-    """Tests can be skipped during development."""
+def test_skipped_incremental_merge() -> None:
     assert False
 
 
-@pytest.mark.xfail(reason="Known bug, to be fixed in v2.0")
+@pytest.mark.xfail(reason="Known limitation in example scaffold")
 def test_expected_failure() -> None:
-    """Test known to fail (but we expect it to be fixed)."""
-    assert False
+    assert validate_model_name("orders") is True
 
-
-# ============================================================================
-# CONTEXT MANAGERS FOR TEMPORARY MOCKING
-# ============================================================================
 
 def test_with_patch_decorator() -> None:
-    """
-    Test using @patch decorator for mocking.
-    
-    **Pattern:** Patch functions/modules that should be mocked
-    """
     with patch("builtins.print") as mock_print:
-        print("Hello, world!")
-        mock_print.assert_called_once_with("Hello, world!")
-
-
-if __name__ == "__main__":
-    # Run tests: pytest tests/test_example.py -v
-    # Run only unit tests: pytest tests/test_example.py -m "unit"
-    # Run without slow tests: pytest tests/test_example.py -m "not slow"
-    # Run with coverage: pytest tests/test_example.py --cov=src --cov-report=html
-    pass
+        print("dbt run --select stg_orders")
+        mock_print.assert_called_once_with("dbt run --select stg_orders")

@@ -13,19 +13,24 @@ This repository provides:
 - `LICENSE.md` — project license
 - `README.md` — project overview
 - `CONTRIBUTING.md` — guidelines for extending the template
+- `docs/GITHUB_TEMPLATE.md` — maintainer guide (GitHub topics, social preview, template settings)
 - `CODE_OF_CONDUCT.md` — community standards
 - `requirements.txt` — Python dependencies for development and testing
 - `pyproject.toml` — Python project configuration and tool settings
 - `docs/DEVELOPMENT.md` — development workflow and standards
 - `docs/AI_SETUP.md` — **start here** — skills and MCP server setup for dbt and Databricks
-- `docs/specs/spec.md` — active feature specification (when present); archived specs live in `docs/specs/` too
+- `docs/specs/` — SDD specs (`spec.md` when active); see `example-stg-orders-models.spec.md`
+- `dbt/README.md` — where and how to add a dbt project
+- `databricks/README.md` — where and how to add a Databricks Asset Bundle
+- `.env.example` — environment variable template (copy to `.env`)
 - `docs/TROUBLESHOOTING.md` — common issues and fixes
 - `docs/VIBE_CODING_GUIDE.md` — contributor guide and Copilot best practices
 - `.github/copilot-instructions.md` — repository-wide Copilot guidance
 - `.github/instructions/` — always-on instruction files: dbt SQL style, Databricks/PySpark, Python
 - `.agents/skills/` — invocable skills (Agent Skills standard): dbt analytics engineering, dbt unit tests, Databricks, spec/task workflows
-- `.github/hooks/pre-commit.template` — pre-commit hook template for Python projects
-- `.github/ci-templates/` — CI workflow templates (copy and customize)
+- `Makefile` — development commands (`make install`, `make test`, optional dbt/Databricks targets)
+- `.pre-commit-config.yaml` — pre-commit hook definitions
+- `.github/workflows/ci.yml` — GitHub Actions CI
 - `.vscode/mcp.json` — MCP server configuration for Databricks and dbt (template — fill in your credentials)
 - `.vscode/settings.json` — shared VS Code settings
 - `.vscode/extensions.json` — recommended VS Code extensions
@@ -54,8 +59,8 @@ git init
 ### Start using the template
 
 1. **Read the AI Setup Guide:** Start with `docs/AI_SETUP.md` to configure MCP servers and skills for dbt and Databricks
-2. **Set up Python:** Run `bash scripts/enable-python.sh`
-3. **Configure MCP servers:** Edit `.vscode/mcp.json` with your Databricks workspace URL and credentials
+2. **Set up Python:** `make install` then `make test`
+3. **Configure MCP servers:** Copy `.env.example` to `.env`, edit `.vscode/mcp.json`, follow `docs/AI_SETUP.md`
 4. Review `.github/copilot-instructions.md` — repository-wide Copilot guidance
 5. Read `docs/DEVELOPMENT.md` for workflow and quality standards
 6. Create a spec for your feature using the `/create-spec` skill

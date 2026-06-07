@@ -135,10 +135,10 @@ All components MUST specify versions. Prefer latest stable.
 | Component | Technology | Version |
 |-----------|-----------|---------|
 | Language | [e.g. Python] | [e.g. 3.12] |
-| Framework | [e.g. FastAPI] | [e.g. 0.115] |
-| Database | [e.g. PostgreSQL] | [e.g. 16] |
-| Infrastructure | [e.g. AWS / Azure / GCP] | [region] |
-| Key dependencies | [list critical libs] | [versions] |
+| Transform layer | [e.g. dbt] | [e.g. 1.8] |
+| Compute platform | [e.g. Databricks] | [e.g. Runtime 15.x] |
+| Orchestration | [e.g. Databricks Workflows / Airflow] | [version] |
+| Key dependencies | [e.g. dbt-databricks, PySpark] | [versions] |
 
 ---
 

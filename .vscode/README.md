@@ -1,66 +1,28 @@
 # VS Code Configuration
 
-This directory contains shared and language-specific VS Code settings and extension recommendations.
+This directory contains VS Code settings and extension recommendations — **pre-configured for Python, dbt, and Databricks**. No setup script required.
 
-## Structure
+## Files
 
-- **settings.json** — Universal settings (formatting, Git, Copilot)
-- **extensions.json** — Universal extension recommendations (Copilot, GitLens, Remote containers, etc)
-- **settings.python.json** — Python-specific settings (linting, testing, type checking)
-- **extensions.python.json** — Python-specific extensions (Pylance, pytest, Black formatter, etc)
-- **merge-configs.py** — Helper script to merge language-specific configs into main settings.json/extensions.json
+| File | Purpose |
+|------|---------|
+| `settings.json` | Editor, Python, pytest, Pylance, and Copilot settings |
+| `extensions.json` | Recommended extensions (Python, dbt Power User, Databricks, Copilot) |
+| `mcp.json` | MCP server config for dbt and Databricks (add your credentials) |
 
-## How It Works
+## Recommended extensions
 
-### For Template Users (No Python)
+Installed via VS Code prompt when you open the project:
 
-By default, you get a clean VS Code setup:
-- **settings.json** contains only universal formatting and Copilot settings
-- **extensions.json** recommends only universal extensions (Copilot, GitLens, etc)
-- No language-specific extensions or settings pollution
+- **Python** — Pylance, Black, flake8, pylint, pytest
+- **dbt Power User** — model editing, lineage, compilation
+- **Databricks** — workspace and notebook integration
+- **GitHub Copilot** — AI-assisted development
 
-### When You Enable Python
+## Python interpreter
 
-Run `bash scripts/enable-python.sh`, which:
-1. Creates virtual environment
-2. Installs dependencies
-3. **Calls** `python .vscode/merge-configs.py python`
+Settings point to `${workspaceFolder}/venv/bin/python`. Run `make install` first to create the virtual environment.
 
-This merge script:
-- Reads `settings.python.json` and merges into `settings.json`
-- Reads `extensions.python.json` and merges into `extensions.json`
-- VS Code automatically loads the updated configs
+## MCP servers
 
-**Result:** Your settings.json and extensions.json are now extended with Python-specific configuration. You'll see a prompt to install recommended extensions.
-
-## Language Extensibility
-
-To add another language (e.g., dbt):
-
-1. Create `.vscode/settings.dbt.json`:
-   ```json
-   {
-     "editor.defaultFormatter": "...",
-     "dbt.projectsDir": "."
-   }
-   ```
-
-2. Create `.vscode/extensions.dbt.json`:
-   ```json
-   {
-     "recommendations": [
-       "innoverio.vscode-dbt-power-user"
-     ]
-   }
-   ```
-
-3. Update or create a setup script to call:
-   ```bash
-   python .vscode/merge-configs.py dbt
-   ```
-
-## Notes
-
-- Language-specific config files are **always in git** so they're available for documentation and merge
-- Main settings.json/extensions.json are **modified locally** (added to git tracked files, but their merged state is not tracked separately)
-- The merge is idempotent: running it multiple times is safe
+Configure `.vscode/mcp.json` with your Databricks workspace URL and dbt credentials. See `docs/AI_SETUP.md` for setup instructions.
