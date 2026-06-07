@@ -49,7 +49,7 @@ and other AI agents:
 | `generate-prompt` | `/generate-prompt` | Generate reusable multi-step prompts |
 | `run-prompt` | `/run-prompt` | Execute saved prompts from `./prompts/` as isolated sub-tasks |
 
-See `.agents/skills/README.md` for skill source notes, update commands, and personal skill locations.
+See `.agents/skills/README.md` for skill descriptions, when-to-use guidance, update commands, and personal skill locations.
 
 ### Keeping Skills Up to Date
 

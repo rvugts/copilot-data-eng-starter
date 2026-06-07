@@ -63,7 +63,7 @@ git init
 2. **Set up Python:** `make install` then `make test`
 3. **Configure MCP servers when needed:** Copy `.env.example` to `.env`, edit `.vscode/mcp.json`, follow `docs/AI_SETUP.md`
 4. Review `.github/copilot-instructions.md` — repository-wide Copilot guidance
-5. Review `.agents/skills/README.md` — the full inventory of invocable skills
+5. Review `.agents/skills/README.md` — what each skill does, when to use it, and how to invoke it
 6. Create a spec for your feature using the `/create-spec` skill
 7. Use the dbt, Databricks, and workflow skills in `.agents/skills/` as needed
 
@@ -101,7 +101,7 @@ This template is purpose-built for data engineering teams working with:
 | `generate-prompt` | `/generate-prompt` | Generate reusable multi-step prompts for local agent workflows |
 | `run-prompt` | `/run-prompt` | Execute saved prompts from `./prompts/` as isolated sub-tasks |
 
-See `.agents/skills/README.md` for skill source notes, update commands, and personal skill locations.
+See `.agents/skills/README.md` for skill descriptions, when-to-use guidance, update commands, and personal skill locations.
 
 ### MCP Servers (live workspace access)
 

@@ -38,7 +38,7 @@ Before using Copilot agent mode, review:
 
 - `.github/copilot-instructions.md` for repo-wide guidance
 - `.github/instructions/` for dbt, Databricks, Python, and TDD rules
-- `.agents/skills/README.md` for the full skill inventory
+- `.agents/skills/README.md` for what each skill does, when to use it, and how to invoke it
 
 ## 4. Configure AI Access
 
