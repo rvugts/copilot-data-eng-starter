@@ -52,7 +52,7 @@ For **conference demos, workshops, or live Copilot presentations**, maintain a *
 - CI and Makefile targets exercised end-to-end
 - Optional Databricks Asset Bundle if the talk covers deployment
 
-Keep the starter template free of demo-only assets. When the starter improves, sync or re-template into the demo repo as needed. See also `docs/GITHUB_TEMPLATE.md`.
+Keep the starter template free of demo-only assets. When the starter improves, sync or re-template into the demo repo as needed.
 
 ## Code of conduct
 

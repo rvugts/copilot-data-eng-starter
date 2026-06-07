@@ -13,7 +13,6 @@ This repository provides:
 - `LICENSE.md` — project license
 - `README.md` — project overview
 - `CONTRIBUTING.md` — guidelines for extending the template
-- `docs/GITHUB_TEMPLATE.md` — maintainer guide (GitHub topics, social preview, template settings)
 - `CODE_OF_CONDUCT.md` — community standards
 - `requirements.txt` — Python dependencies for development and testing
 - `pyproject.toml` — Python project configuration and tool settings

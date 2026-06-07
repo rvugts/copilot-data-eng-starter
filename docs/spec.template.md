@@ -15,6 +15,16 @@ The `name` in the YAML frontmatter is the stable identifier used when this file 
 > Every requirement maps to acceptance criteria. Every acceptance criterion maps to a test.
 > If it's not in the spec, it doesn't get built. If it can't be tested, it's not a requirement.
 
+> **For dbt / data pipeline specs:** Use a slimmer slice of this template — not every section applies.
+>
+> **Typical sections for one dbt model:** Context (problem + value, brief) · Scope · §3.1 Functional requirements · Technical stack · Success criteria · Open questions. Optional: §4 Behavior (lite), §7 Data model (lite).
+>
+> **Emphasize:** §2 Scope (layers, non-goals) · §3.1 Functional requirements (testable FRs) · §4 Behavior (lite — grain, filters, joins) · §7 Data model (lite — keys, columns; ERD only if needed) · §11 Test cases (dbt `schema.yml` + `/adding-dbt-unit-test`)
+>
+> **Skip or mark N/A:** §3.2 Non-functional (app NFRs like OAuth, p95 latency) · §8 Interface contract · §9 Error handling contract · §6 Architecture (unless multi-job or cross-system)
+>
+> Scale depth to complexity: one staging model = the typical sections above; a new mart layer or bundle adds Architecture and Data model detail. Archived specs in `docs/specs/` (see [specs/README.md](./specs/README.md)) may include optional examples from this template.
+
 ---
 
 ## 1. Context
