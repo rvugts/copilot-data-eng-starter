@@ -61,7 +61,7 @@ class TestModelNaming:
     """Tests for dbt-style model name validation."""
 
     def test_valid_staging_model_accepted(self) -> None:
-        assert validate_model_name("stg_orders") is True
+        assert validate_model_name("stg_raw__orders") is True
 
     def test_invalid_model_without_layer_prefix_rejected(self) -> None:
         assert validate_model_name("orders") is False
@@ -69,7 +69,7 @@ class TestModelNaming:
     @pytest.mark.parametrize(
         "name,expected",
         [
-            ("stg_orders", True),
+            ("stg_raw__orders", True),
             ("int_orders_enriched", True),
             ("fct_orders", True),
             ("dim_customers", True),
@@ -124,7 +124,7 @@ class TestPipelineConfig:
     """Tests for batch pipeline configuration."""
 
     def test_staging_table_fqn(self, pipeline_config: PipelineConfig) -> None:
-        assert pipeline_config.staging_table == "main.analytics.stg_orders"
+        assert pipeline_config.staging_table == "main.analytics.stg_raw__orders"
 
     def test_rejects_catalog_with_dot(self) -> None:
         with pytest.raises(ValueError, match="must not contain"):
@@ -143,7 +143,7 @@ class TestSparkBatchLoad:
     ) -> None:
         mock_spark_session.table(pipeline_config.staging_table).count()
 
-        mock_spark_session.table.assert_called_once_with("main.analytics.stg_orders")
+        mock_spark_session.table.assert_called_once_with("main.analytics.stg_raw__orders")
         mock_spark_session.table.return_value.count.assert_called_once()
 
 
@@ -180,12 +180,14 @@ def test_catalog_client_lists_schemas_in_each_environment(
 
 @pytest.mark.unit
 def test_is_unit_test() -> None:
-    assert validate_model_name("stg_smoke") is True
+    assert validate_model_name("stg_raw__smoke") is True
 
 
 @pytest.mark.integration
 def test_is_integration_test() -> None:
-    assert build_table_fqn("main", "analytics", "stg_orders") == "main.analytics.stg_orders"
+    assert (
+        build_table_fqn("main", "analytics", "stg_raw__orders") == "main.analytics.stg_raw__orders"
+    )
 
 
 @pytest.mark.slow
@@ -207,5 +209,5 @@ def test_expected_failure() -> None:
 
 def test_with_patch_decorator() -> None:
     with patch("builtins.print") as mock_print:
-        print("dbt run --select stg_orders")
-        mock_print.assert_called_once_with("dbt run --select stg_orders")
+        print("dbt run --select stg_raw__orders")
+        mock_print.assert_called_once_with("dbt run --select stg_raw__orders")

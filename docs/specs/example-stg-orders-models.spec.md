@@ -30,7 +30,7 @@ Analysts need a cleaned, tested staging layer for the `raw.orders` source before
 
 ### 2.1 In Scope
 
-- One staging model: `stg_orders` from `{{ source('raw', 'orders') }}`
+- One staging model: `stg_raw__orders` from `{{ source('raw', 'orders') }}`
 - Column renaming to snake_case, type casting for `order_id` and `order_timestamp`
 - `schema.yml` with `not_null` + `unique` on `order_id`
 
@@ -46,7 +46,7 @@ Analysts need a cleaned, tested staging layer for the `raw.orders` source before
 
 | ID | Requirement | Acceptance Criteria | Priority |
 |----|-------------|---------------------|----------|
-| FR-1 | Staging model exists | `models/staging/stg_orders.sql` compiles with `dbt parse` | Must Have |
+| FR-1 | Staging model exists | `models/staging/stg_raw__orders.sql` compiles with `dbt parse` | Must Have |
 | FR-2 | Source reference | Uses `{{ source('raw', 'orders') }}` — no hardcoded table names | Must Have |
 | FR-3 | Primary key tests | `order_id` has `not_null` and `unique` in `schema.yml` | Must Have |
 | FR-4 | Unit test (TDD) | `/adding-dbt-unit-test` defines expected output for cancelled-order exclusion before SQL | Should Have |
@@ -65,7 +65,7 @@ Analysts need a cleaned, tested staging layer for the `raw.orders` source before
 
 ## 5. Success Criteria
 
-- [ ] `dbt build --select stg_orders` passes in dev
+- [ ] `dbt build --select stg_raw__orders` passes in dev
 - [ ] All FR-* acceptance criteria met
 - [ ] Spec requirements traceable to dbt tests in `schema.yml`
 

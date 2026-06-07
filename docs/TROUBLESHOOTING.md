@@ -285,7 +285,7 @@ Use Conventional Commits: `<type>: <description>`
 
 **Examples:**
 ```bash
-git commit -m "feat: add stg_orders staging model"
+git commit -m "feat: add stg_raw__orders staging model"
 git commit -m "fix: handle null order_id in int_orders"
 git commit -m "docs: update dbt model naming ADR"
 ```

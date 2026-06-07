@@ -78,18 +78,23 @@ extend-exclude = '''
 )/
 '''
 
+[tool.pylint.main]
+init-hook = 'import sys; sys.path.insert(0, ".")'
+load-plugins = ["pylint_pytest"]
+
 [tool.pylint.messages_control]
 disable = [
     "C0111",  # missing-docstring
     "C0103",  # invalid-name
     "R0913",  # too-many-arguments
+    "R0903",  # too-few-public-methods (common in test classes and data containers)
 ]
 
 [tool.pylint.format]
 max-line-length = 100
 
 [tool.pyright]
-include = ["src"]
+include = ["src", "tests"]
 exclude = ["**/node_modules", "**/__pycache__", "venv", "**/.*"]
 venvPath = "."
 venv = "venv"

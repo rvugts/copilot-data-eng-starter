@@ -54,3 +54,16 @@ The banner includes the repo name, stack badges (dbt · Databricks · Python · 
 ## Template description
 
 The file `.github/TEMPLATE.md` is shown when someone clicks **Use this template**. Keep it focused on first steps after repo creation.
+
+## Demo and presentation repos
+
+Do **not** add a runnable dbt project, sample warehouse config, or other stack-specific scaffolding to this template repo. Adopters need a blank slate they can `dbt init` into.
+
+For live demos (conferences, internal workshops, Copilot walkthroughs), use a **separate demo repository**:
+
+1. Click **Use this template** to create e.g. `copilot-data-eng-demo`
+2. Add a minimal dbt project, `profiles.yml.example`, and any MCP/CI wiring for your Databricks (or other) stack
+3. Implement the example spec so Copilot, MCP, and CI have real models to reference during the talk
+4. Periodically pull starter improvements (docs, skills, instructions) into the demo repo
+
+The starter remains the reusable product; the demo repo is the opinionated, runnable instance for a specific audience and presentation.

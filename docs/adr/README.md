@@ -84,7 +84,7 @@ Proposed  →  Accepted  →  Deprecated
 ## Using ADRs as an AI Agent
 
 When working with Copilot:
-- Reference ADRs in your requests: "Per ADR-001, use `stg_` prefix for staging models"
+- Reference ADRs in your requests: "Per ADR-001, use `stg_<source>__<entity>` for staging models"
 - Check ADRs before violating architectural decisions
 - If an ADR seems wrong, propose a new ADR (don't silently violate)
 - Link ADRs in code comments for complex decisions

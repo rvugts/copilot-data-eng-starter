@@ -112,7 +112,7 @@ This repository is optimised for dbt, Databricks, and Python data engineering:
 
 ### dbt
 - Always use `{{ ref() }}` and `{{ source() }}` — never hardcode table names
-- Follow the model layer naming: `stg_` → `int_` → `fct_`/`dim_`/`rpt_`
+- Follow the model layer naming: `stg_<source>__<entity>` → `int_` → `fct_`/`dim_`/`rpt_`
 - Every new model must have `schema.yml` tests (at minimum `not_null` + `unique` on the primary key)
 - Use CTEs over subqueries; trailing commas; lowercase SQL keywords
 - Use `/using-dbt-for-analytics-engineering` skill for model building

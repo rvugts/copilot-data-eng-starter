@@ -41,7 +41,7 @@ jobs:
 
   dbt:
     runs-on: ubuntu-latest
-    if: hashFiles('dbt_project.yml', 'dbt/dbt_project.yml') != ''
+    if: ${{ hashFiles('dbt_project.yml', 'dbt/dbt_project.yml') != '' }}
 
     steps:
       - name: Checkout repository

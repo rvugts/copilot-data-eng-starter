@@ -33,13 +33,15 @@ applyTo: >-
 
 Follow the standard dbt layering pattern:
 
-- `stg_` — Staging models: one-to-one with source tables, light renaming and type casting only
+- `stg_<source>__<entity>` — Staging models: one-to-one with source tables, light renaming and type casting only. Example: `stg_raw__orders` from `{{ source('raw', 'orders') }}`
 - `int_` — Intermediate models: business logic, joins, transformations between staging and final
 - `fct_` — Fact models: event-based, grain is one row per event/transaction
 - `dim_` — Dimension models: descriptive attributes, slowly changing dimensions
 - `rpt_` — Report models: pre-aggregated for specific dashboards or consumers (optional layer)
 
-Source naming: use `src_` prefix or define in `sources.yml` with explicit `loaded_at_field` for freshness checks.
+Official dbt skill examples may use shortened names (e.g. `stg_orders`) for readability. In this project, always use `stg_<source>__<entity>` for staging models.
+
+Source naming: define sources in `sources.yml` with explicit `loaded_at_field` for freshness checks.
 
 ## dbt Model Structure
 
@@ -50,11 +52,11 @@ Every model should follow this structure:
 with
 
 source_claims as (
-    select * from {{ ref('stg_claims') }}
+    select * from {{ ref('stg_raw__claims') }}
 ),
 
 source_providers as (
-    select * from {{ ref('stg_providers') }}
+    select * from {{ ref('stg_raw__providers') }}
 ),
 
 -- 2. CTEs for transformations

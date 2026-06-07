@@ -71,4 +71,4 @@ class PipelineConfig(BaseModel):
 
     @property
     def staging_table(self) -> str:
-        return build_table_fqn(self.catalog, self.schema_name, "stg_orders")
+        return build_table_fqn(self.catalog, self.schema_name, "stg_raw__orders")

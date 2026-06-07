@@ -33,10 +33,10 @@ Configure connection profiles in `~/.dbt/profiles.yml` (never commit credentials
 
 ## Conventions (when you start)
 
-| Layer | Prefix | Materialization |
-|-------|--------|-----------------|
-| Staging | `stg_` | view |
-| Intermediate | `int_` | view |
-| Marts | `fct_`, `dim_`, `rpt_` | table |
+| Layer | Prefix | Example | Materialization |
+|-------|--------|---------|-----------------|
+| Staging | `stg_<source>__<entity>` | `stg_raw__orders` | view |
+| Intermediate | `int_` | `int_orders_enriched` | view |
+| Marts | `fct_`, `dim_`, `rpt_` | `fct_orders`, `dim_customers` | table |
 
 You can document team-specific decisions in `docs/adr/` (see suggested titles in `docs/adr/README.md`).

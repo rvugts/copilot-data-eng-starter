@@ -87,7 +87,7 @@ Applies to: All `.sql` files; `schema.yml`, `sources.yml`, `dbt_project.yml`; YA
 
 Covers:
 - SQL style (lowercase keywords, trailing commas, CTEs over subqueries)
-- dbt model naming conventions (`stg_`, `int_`, `fct_`, `dim_`, `rpt_`)
+- dbt model naming conventions (`stg_<source>__<entity>`, `int_`, `fct_`, `dim_`, `rpt_`)
 - Standard model structure (import CTEs → transformation CTEs → `final`)
 - dbt testing standards (`not_null`, `unique`, `relationships`, `accepted_values`)
 - Column-level documentation in `schema.yml`
@@ -164,7 +164,7 @@ When working on `src/utils/transform.py`, Copilot applies:
 
 ### Example 2: dbt Staging Model
 
-When working on `models/staging/stg_orders.sql`, Copilot applies:
+When working on `models/staging/stg_raw__orders.sql`, Copilot applies:
 - ✅ `dbt/dbt-sql.instructions.md` (matches `**/*.sql`)
 
 When working on `models/staging/schema.yml`, Copilot applies:

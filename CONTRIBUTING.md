@@ -41,6 +41,19 @@ When contributing dbt or pipeline changes to this template:
 
 When adding or modifying templates, update `README.md`, `docs/DEVELOPMENT.md`, or other relevant docs so new users can discover the change.
 
+## Demo and presentation repos
+
+This starter template stays **generic** — no bundled dbt project, Databricks bundle, or warehouse credentials. That keeps “Use this template” clean for any team.
+
+For **conference demos, workshops, or live Copilot presentations**, maintain a **separate demo repo** derived from this template. The demo repo is where stack-specific, runnable content belongs:
+
+- Minimal dbt project (e.g. implementing `docs/specs/example-stg-orders-models.spec.md`)
+- `profiles.yml.example` and MCP config pointed at the real project
+- CI and Makefile targets exercised end-to-end
+- Optional Databricks Asset Bundle if the talk covers deployment
+
+Keep the starter template free of demo-only assets. When the starter improves, sync or re-template into the demo repo as needed. See also `docs/GITHUB_TEMPLATE.md`.
+
 ## Code of conduct
 
 By contributing, you agree to follow the repository's standards for respectful collaboration.

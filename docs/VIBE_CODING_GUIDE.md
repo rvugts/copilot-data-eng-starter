@@ -335,6 +335,10 @@ Use the generate-prompt skill to create a multi-step prompt for analyzing our da
 - Support for sequential multi-prompt workflows
 - Automatic prompt numbering and saving to `./prompts/`
 
+Saved prompt files are local workflow artifacts. The `prompts/` folder is present
+for convenience, but prompt files are ignored by git and are not part of the
+starter template.
+
 ### 6. run-prompt
 **Purpose**: Execute saved prompts as isolated sub-tasks
 
@@ -416,7 +420,7 @@ pip install dbt-spark        # for Spark
 
 #### Standards
 - **Model Structure**: `models/staging/`, `models/intermediate/`, `models/marts/`
-- **Naming**: `stg_<source>__<entity>.sql` for staging, `<entity>.sql` for marts
+- **Naming**: `stg_<source>__<entity>.sql` for staging, `fct_`/`dim_`/`rpt_` for marts
 - **Testing**: Add schema tests (`not_null`, `unique`, `accepted_values`) in `schema.yml`
 - **Documentation**: Describe all models and columns in `schema.yml`
 
@@ -535,7 +539,7 @@ class EmailValidator:
 ### dbt Model Example
 
 ```sql
--- models/staging/stg_orders.sql
+-- models/staging/stg_raw__orders.sql
 with source as (
     select * from {{ source('raw', 'orders') }}
 ),
@@ -556,7 +560,7 @@ select * from renamed
 ```yaml
 # models/staging/schema.yml
 models:
-  - name: stg_orders
+  - name: stg_raw__orders
     description: Staged orders from the raw source
     columns:
       - name: order_id

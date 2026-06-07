@@ -108,7 +108,8 @@ logs/
 
 # Local agent workflow (not shipped in template)
 analyses/
-prompts/
+prompts/*
+!prompts/.gitkeep
 
 # MCP Server configs (may contain secrets)
 mcp-servers/*/config.json

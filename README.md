@@ -17,8 +17,9 @@ This repository provides:
 - `CODE_OF_CONDUCT.md` — community standards
 - `requirements.txt` — Python dependencies for development and testing
 - `pyproject.toml` — Python project configuration and tool settings
+- `docs/GETTING_STARTED.md` — **start here** — Day 1 setup path for VS Code and Copilot
 - `docs/DEVELOPMENT.md` — development workflow and standards
-- `docs/AI_SETUP.md` — **start here** — skills and MCP server setup for dbt and Databricks
+- `docs/AI_SETUP.md` — skills and MCP server setup for dbt and Databricks
 - `docs/specs/` — SDD specs (`spec.md` when active); see `example-stg-orders-models.spec.md`
 - `dbt/README.md` — where and how to add a dbt project
 - `databricks/README.md` — where and how to add a Databricks Asset Bundle
@@ -58,13 +59,13 @@ git init
 
 ### Start using the template
 
-1. **Read the AI Setup Guide:** Start with `docs/AI_SETUP.md` to configure MCP servers and skills for dbt and Databricks
+1. **Start with `docs/GETTING_STARTED.md`:** Follow the Day 1 path for VS Code, GitHub Copilot, Python, MCP, dbt, and Databricks
 2. **Set up Python:** `make install` then `make test`
-3. **Configure MCP servers:** Copy `.env.example` to `.env`, edit `.vscode/mcp.json`, follow `docs/AI_SETUP.md`
+3. **Configure MCP servers when needed:** Copy `.env.example` to `.env`, edit `.vscode/mcp.json`, follow `docs/AI_SETUP.md`
 4. Review `.github/copilot-instructions.md` — repository-wide Copilot guidance
-5. Read `docs/DEVELOPMENT.md` for workflow and quality standards
+5. Review `.agents/skills/README.md` — the full inventory of invocable skills
 6. Create a spec for your feature using the `/create-spec` skill
-7. Use the dbt and Databricks skills in `.agents/skills/` as needed
+7. Use the dbt, Databricks, and workflow skills in `.agents/skills/` as needed
 
 ## Stack
 
@@ -85,11 +86,22 @@ This template is purpose-built for data engineering teams working with:
 |-------|--------|---------|
 | `using-dbt-for-analytics-engineering` | `/using-dbt-for-analytics-engineering` | Build models, write SQL, discover data, debug errors |
 | `adding-dbt-unit-test` | `/adding-dbt-unit-test` | TDD for dbt — unit tests before SQL implementation |
+| `building-dbt-semantic-layer` | `/building-dbt-semantic-layer` | Create metrics, semantic models, dimensions, and entities |
+| `answering-natural-language-questions-with-dbt` | `/answering-natural-language-questions-with-dbt` | Answer analytics questions with dbt Semantic Layer or SQL |
+| `working-with-dbt-mesh` | `/working-with-dbt-mesh` | Model contracts, access, groups, versioning, and cross-project refs |
+| `troubleshooting-dbt-job-errors` | `/troubleshooting-dbt-job-errors` | Diagnose dbt Cloud/platform job failures |
+| `configuring-dbt-mcp-server` | `/configuring-dbt-mcp-server` | Configure and troubleshoot the dbt MCP server |
+| `running-dbt-commands` | `/running-dbt-commands` | Format dbt CLI commands, selectors, and parameters |
+| `fetching-dbt-docs` | `/fetching-dbt-docs` | Retrieve dbt documentation for current features and APIs |
 | `databricks` | `/databricks` | CLI auth, Unity Catalog, job deployment, Asset Bundles |
 | `create-spec` | `/create-spec` | Spec-Driven Development — write a feature specification |
 | `create-tasks` | `/create-tasks` | Break a spec into ordered executable tasks |
 | `audit-security` | `/audit-security` | Security audit of the codebase |
 | `refactor-python` | `/refactor-python` | Python refactoring with engineering best practices |
+| `generate-prompt` | `/generate-prompt` | Generate reusable multi-step prompts for local agent workflows |
+| `run-prompt` | `/run-prompt` | Execute saved prompts from `./prompts/` as isolated sub-tasks |
+
+See `.agents/skills/README.md` for skill source notes, update commands, and personal skill locations.
 
 ### MCP Servers (live workspace access)
 
@@ -118,7 +130,7 @@ This template supports SDD — every feature starts with a specification that se
 3. The skill writes `docs/specs/spec.md` (archiving any previous active spec using its frontmatter `name`), aligned with `docs/spec.template.md`
 4. Use the `create-tasks` skill (or invoke `/create-tasks`) to decompose the spec into an ordered, executable task list at `docs/specs/tasks.md`
 5. Work through the tasks in order — write tests first (TDD), then implement
-6. Use `/generate-prompt` and `/run-prompt` to delegate individual tasks to Copilot agents
+6. Use `/generate-prompt` and `/run-prompt` to delegate individual tasks to Copilot agents when useful. Saved prompt files are local workflow artifacts: `prompts/` is present for convenience, but prompt files are ignored by git and are not part of the starter template.
 
 The `create-spec` and `create-tasks` skills support Python, Databricks/PySpark/SQL, dbt, and other stacks. See `.agents/skills/` for details.
 

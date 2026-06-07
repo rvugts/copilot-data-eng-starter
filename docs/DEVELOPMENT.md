@@ -160,6 +160,9 @@ git push origin feature/your-feature-name
 | `/run-prompt` | Execute saved prompts |
 
 See `.agents/skills/README.md` for the full list.
+Saved prompt files are local workflow artifacts: `prompts/` is present for agent
+workflows, but prompt files are ignored by git and are not part of the starter
+template.
 
 **Requesting Features from Copilot:**
 

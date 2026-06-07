@@ -34,13 +34,22 @@ and other AI agents:
 |-------|--------|---------|
 | `using-dbt-for-analytics-engineering` | `/using-dbt-for-analytics-engineering` | Build/modify models, write SQL, debug, write tests |
 | `adding-dbt-unit-test` | `/adding-dbt-unit-test` | TDD for dbt — write unit tests before implementing |
+| `building-dbt-semantic-layer` | `/building-dbt-semantic-layer` | Create metrics, semantic models, dimensions, and entities |
+| `answering-natural-language-questions-with-dbt` | `/answering-natural-language-questions-with-dbt` | Answer analytics questions with dbt Semantic Layer or SQL |
+| `working-with-dbt-mesh` | `/working-with-dbt-mesh` | Model contracts, access, groups, versioning, and cross-project refs |
+| `troubleshooting-dbt-job-errors` | `/troubleshooting-dbt-job-errors` | Diagnose dbt Cloud/platform job failures |
+| `configuring-dbt-mcp-server` | `/configuring-dbt-mcp-server` | Configure and troubleshoot the dbt MCP server |
+| `running-dbt-commands` | `/running-dbt-commands` | Format dbt CLI commands, selectors, and parameters |
+| `fetching-dbt-docs` | `/fetching-dbt-docs` | Retrieve dbt documentation for current features and APIs |
 | `databricks` | `/databricks` | CLI auth, Unity Catalog exploration, job/pipeline deployment |
 | `create-spec` | `/create-spec` | Spec-Driven Development — write a feature spec |
 | `create-tasks` | `/create-tasks` | Break a spec into executable tasks |
 | `audit-security` | `/audit-security` | Security audit of the codebase |
 | `refactor-python` | `/refactor-python` | Refactor Python with engineering best practices |
 | `generate-prompt` | `/generate-prompt` | Generate reusable multi-step prompts |
-| `run-prompt` | `/run-prompt` | Execute saved prompts as isolated sub-tasks |
+| `run-prompt` | `/run-prompt` | Execute saved prompts from `./prompts/` as isolated sub-tasks |
+
+See `.agents/skills/README.md` for skill source notes, update commands, and personal skill locations.
 
 ### Keeping Skills Up to Date
 
@@ -146,7 +155,7 @@ VS Code will start the dbt MCP server automatically.
 
 - "List my dbt models and their descriptions"
 - "Show the lineage upstream of `fct_orders`"
-- "Run `dbt show --select stg_customers --limit 10` and show me the results"
+- "Run `dbt show --select stg_raw__customers --limit 10` and show me the results"
 - "What metrics are defined in the semantic layer?"
 
 ---
@@ -181,7 +190,7 @@ They enforce coding style and conventions as you edit.
    → Writes unit_tests: block in schema.yml before implementing the SQL
 
 4. Iterate with the dbt MCP server:
-   "Run dbt show --select stg_orders --limit 20"
+   "Run dbt show --select stg_raw__orders --limit 20"
    → Live preview without switching to terminal
 ```
 
