@@ -30,14 +30,24 @@ gh repo edit --add-topic dbt --add-topic databricks --add-topic data-engineering
 
 ## Social preview image
 
-A ready-made banner lives at **`docs/assets/social-preview.png`** (1280×640).
+A ready-made banner lives at **`docs/assets/social-preview.png`** (1280×640, under 1 MB).
 
-Upload it under **Settings → General → Social preview** on GitHub.com, or from the CLI after pushing:
+GitHub does **not** expose a public REST API for uploading social preview images — use the web UI:
+
+1. Open repo **Settings → General → Social preview → Edit → Upload an image…**
+2. Select `docs/assets/social-preview.png` from your local clone
+
+Shortcuts from the repo root:
 
 ```bash
-gh api repos/{owner}/{repo}/social-preview --method POST \
-  -F "image=@docs/assets/social-preview.png;type=image/png"
+# Open the image in Preview (macOS)
+open docs/assets/social-preview.png
+
+# Open repo settings in the browser
+gh browse --settings
 ```
+
+Or open directly: `https://github.com/rvugts/copilot-data-eng-starter/settings`
 
 The banner includes the repo name, stack badges (dbt · Databricks · Python · Copilot), and tagline *SDD + TDD starter for data teams*.
 

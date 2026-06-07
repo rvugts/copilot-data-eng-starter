@@ -106,6 +106,10 @@ logs/
 *.bak
 *~
 
+# Local agent workflow (not shipped in template)
+analyses/
+prompts/
+
 # MCP Server configs (may contain secrets)
 mcp-servers/*/config.json
 !mcp-servers/*/config-examples/*
