@@ -110,6 +110,18 @@
   "git.ignoreLimitWarning": true,
 
   // ============================================================================
+  // MCP Configuration Schema
+  // ============================================================================
+  // .vscode/mcp.json uses VS Code's "servers" key (not Cursor's "mcpServers").
+  // Point the JSON validator at the VS Code MCP schema to avoid false warnings in Cursor.
+  "json.schemas": [
+    {
+      "fileMatch": [".vscode/mcp.json"],
+      "url": "https://gist.githubusercontent.com/AArnott/ea481eeb07fb78b4b6bf4b7436d88009/raw"
+    }
+  ],
+
+  // ============================================================================
   // Copilot Configuration (Universal)
   // ============================================================================
   "github.copilot.enable": {
