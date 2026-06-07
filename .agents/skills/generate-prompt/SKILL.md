@@ -363,7 +363,7 @@ What's next?
 </presentation>
 
 <action>
-If user chooses "Run prompt now": invoke the `run-prompt` skill with prompt `005`; if direct skill invocation is unavailable in the current client, read `./.github/skills/run-prompt/SKILL.md` and follow its procedure in the current conversation
+If user chooses "Run prompt now": invoke the `run-prompt` skill with prompt `005`; if direct skill invocation is unavailable in the current client, read `./.agents/skills/run-prompt/SKILL.md` and follow its procedure in the current conversation
 If user chooses "Review/edit prompt first": open the prompt file in the editor using VS Code command support when available
 If user chooses "Other": ask what they would like to do next
 </action>
@@ -388,8 +388,8 @@ What's next?
 </presentation>
 
 <actions>
-If user chooses "Run prompts sequentially now": invoke the `run-prompt` skill with prompts `005 006 007`; if direct skill invocation is unavailable in the current client, read `./.github/skills/run-prompt/SKILL.md` and follow its procedure in the current conversation
-If user chooses "Run first prompt only": invoke the `run-prompt` skill with prompt `005`; if direct skill invocation is unavailable in the current client, read `./.github/skills/run-prompt/SKILL.md` and follow its procedure in the current conversation
+If user chooses "Run prompts sequentially now": invoke the `run-prompt` skill with prompts `005 006 007`; if direct skill invocation is unavailable in the current client, read `./.agents/skills/run-prompt/SKILL.md` and follow its procedure in the current conversation
+If user chooses "Run first prompt only": invoke the `run-prompt` skill with prompt `005`; if direct skill invocation is unavailable in the current client, read `./.agents/skills/run-prompt/SKILL.md` and follow its procedure in the current conversation
 If user chooses "Review/edit prompts first": open each prompt file in the editor using VS Code command support when available
 If user chooses "Other": ask what they would like to do next
 </actions>
@@ -422,5 +422,5 @@ If user chooses "Other": ask what they would like to do next
 - Each prompt file should contain ONLY the prompt content, no preamble or explanation
 - After saving, present the decision tree using `vscode_askQuestions`
 - For file references in generated prompts, use markdown links for files and explicit relative folder paths
-- When user chooses to run prompts, invoke the `run-prompt` skill directly when available; otherwise read `./.github/skills/run-prompt/SKILL.md` and follow its instructions in the current conversation
+- When user chooses to run prompts, invoke the `run-prompt` skill directly when available; otherwise read `./.agents/skills/run-prompt/SKILL.md` and follow its instructions in the current conversation
 </meta_instructions>

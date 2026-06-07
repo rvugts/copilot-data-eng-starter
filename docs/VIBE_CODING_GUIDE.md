@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to the **Vibe Coding** approach! This guide outlines our development philosophy, best practices, and Copilot usage guidelines for the copilot-dev-starter repository. Vibe coding emphasizes intuitive, high-quality development that feels natural while maintaining rigorous standards.
+Welcome to the **Vibe Coding** approach! This guide outlines our development philosophy, best practices, and Copilot usage guidelines for the copilot-data-eng-starter repository. Vibe coding emphasizes intuitive, high-quality development that feels natural while maintaining rigorous standards.
 
 ## Core Philosophy
 
@@ -168,9 +168,73 @@ Create the implementation following this spec and python-django.instructions.md.
 "Refactor this Python code applying sound engineering practices, DRY, and security without altering functionality."
 ```
 
+## AI Setup
+
+Before diving in, set up the MCP servers and keep your skills current:
+
+- **[docs/AI_SETUP.md](AI_SETUP.md)** — step-by-step guide for configuring the Databricks Managed MCP Server and the dbt MCP Server, plus how to update skills from the official dbt Labs and Databricks packages.
+- **Recommended watch:** [AI-Powered Data Engineering with dbt and MCP](https://www.youtube.com/watch?v=34RkoSPfpV4) — demonstrates the dbt skills and MCP server in action.
+
 ## Available Copilot Skills
 
 This repository includes specialized Copilot skills to enhance your workflow. Skills are automatically invoked when relevant, or you can invoke them explicitly.
+
+### dbt Skills
+
+#### using-dbt-for-analytics-engineering
+**Purpose:** Build and modify dbt models, write SQL using `ref()` and `source()`, explore data sources, write tests, and validate results.
+
+**Best for:**
+- Building new staging, intermediate, or mart models
+- Debugging compilation or runtime errors
+- Refactoring model structure (CTEs, naming, layer conventions)
+- Writing schema.yml tests alongside new models
+
+**How to invoke:**
+```
+Use the using-dbt-for-analytics-engineering skill to build a staging model for the raw.orders source.
+```
+
+**Key behaviours:**
+- Always runs `dbt show` to preview source data before writing SQL
+- Follows DAG layer conventions (stg_, int_, fct_, dim_)
+- Writes schema.yml tests alongside every new model
+- Asks "why a new model?" before adding one
+
+#### adding-dbt-unit-test
+**Purpose:** Write dbt unit tests (TDD) for model SQL logic — mock upstream inputs and assert expected outputs.
+
+**Best for:**
+- TDD workflow: write the test before implementing the SQL
+- Testing business logic (discount calculations, status transitions)
+- Testing edge cases: NULL handling, boundary conditions
+
+**How to invoke:**
+```
+Use the adding-dbt-unit-test skill to add a test for the cancelled-orders-excluded logic.
+```
+
+**Output:** Writes a `unit_tests:` block in the model's `schema.yml` file.
+
+---
+
+### Databricks Skill
+
+#### databricks
+**Purpose:** Databricks CLI operations, Unity Catalog exploration, Lakeflow Jobs/Pipelines, and Asset Bundle deployment.
+
+**Best for:**
+- Authenticating and selecting workspace profiles
+- Exploring Unity Catalog schemas and tables
+- Creating and deploying jobs via Asset Bundles (DABs)
+- Scaffolding new Databricks projects
+
+**How to invoke:**
+```
+Use the databricks skill to scaffold a new Asset Bundle project with a daily PySpark job.
+```
+
+---
 
 ### 1. create-spec
 **Purpose:** Produce a specification aligned with `docs/spec.template.md` using specification-driven development
@@ -344,35 +408,34 @@ make help
 - Ask for type-annotated code
 - Request comprehensive tests
 
-### Terraform Development
+### dbt Development
 
 #### Setup
+Install dbt and the appropriate adapter for your platform:
 ```bash
-# Enable Terraform environment
-bash scripts/enable-terraform.sh
-
-# View available commands
-make help
+pip install dbt-databricks   # for Databricks
+# or
+pip install dbt-spark        # for Spark
 ```
 
 #### Standards
-- **Version Pinning**: Use .terraform-version
-- **Module Structure**: terraform/modules/, terraform/envs/
-- **Naming**: snake_case for resources
-- **Documentation**: README.md in modules
+- **Model Structure**: `models/staging/`, `models/intermediate/`, `models/marts/`
+- **Naming**: `stg_<source>__<entity>.sql` for staging, `<entity>.sql` for marts
+- **Testing**: Add schema tests (`not_null`, `unique`, `accepted_values`) in `schema.yml`
+- **Documentation**: Describe all models and columns in `schema.yml`
 
-#### Copilot Terraform Tips
-- Specify Terraform version (1.14.8+)
-- Request modular, reusable code
-- Ask for security best practices
-- Include validation and testing
+#### Copilot dbt Tips
+- Reference `.github/instructions/dbt/dbt-sql.instructions.md`
+- Ask for Jinja-templated SQL following dbt conventions
+- Request schema tests alongside every new model
+- Ask Copilot to generate `schema.yml` entries for new models
 
 ## Contributing Process
 
 ### 1. Fork and Clone
 ```bash
-git clone https://github.com/your-username/copilot-dev-starter.git
-cd copilot-dev-starter
+git clone https://github.com/your-username/copilot-data-eng-starter.git
+cd copilot-data-eng-starter
 ```
 
 ### 2. Choose Your Path
@@ -383,17 +446,11 @@ bash scripts/enable-python.sh
 # Develop following TDD workflow
 ```
 
-#### For Terraform Projects
+#### For dbt Projects
 ```bash
-bash scripts/enable-terraform.sh
-# Develop with validation and planning
-```
-
-#### For Multi-Language Projects
-```bash
-bash scripts/enable-python.sh
-bash scripts/enable-terraform.sh
-# Both environments configured safely
+pip install dbt-databricks  # or your adapter
+dbt init
+# Follow dbt conventions in .github/instructions/dbt/
 ```
 
 ### 3. Development Workflow
@@ -405,7 +462,6 @@ bash scripts/enable-terraform.sh
 # 4. Refactor for quality (TDD Refactor)
 # 5. Run full test suite
 make test  # Python
-make validate  # Terraform
 
 # 6. Format and lint
 make format
@@ -479,37 +535,45 @@ class EmailValidator:
 
 **Copilot Tips**: Use `refactor-python` skill in step 3 to further optimize code structure, add type hints, and ensure security best practices.
 
-### Terraform Module Example
+### dbt Model Example
 
-```hcl
-# modules/vpc/main.tf
-variable "vpc_cidr" {
-  description = "CIDR block for VPC"
-  type        = string
-  validation {
-    condition     = can(cidrhost(var.vpc_cidr, 0))
-    error_message = "Must be valid CIDR block"
-  }
-}
+```sql
+-- models/staging/stg_orders.sql
+with source as (
+    select * from {{ source('raw', 'orders') }}
+),
 
-resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr
+renamed as (
+    select
+        order_id,
+        customer_id,
+        order_date,
+        status,
+        total_amount
+    from source
+)
 
-  tags = {
-    Name        = "main-vpc"
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  }
-}
-
-# modules/vpc/outputs.tf
-output "vpc_id" {
-  description = "ID of the created VPC"
-  value       = aws_vpc.main.id
-}
+select * from renamed
 ```
 
-**Copilot Tips**: After creating your Terraform modules, use the `audit-security` skill to identify any security vulnerabilities and ensure compliance with best practices.
+```yaml
+# models/staging/schema.yml
+models:
+  - name: stg_orders
+    description: Staged orders from the raw source
+    columns:
+      - name: order_id
+        description: Unique order identifier
+        tests:
+          - not_null
+          - unique
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['pending', 'completed', 'cancelled']
+```
+
+**Copilot Tips**: Reference `.github/instructions/dbt/dbt-sql.instructions.md` when asking Copilot to generate dbt models. Always ask for accompanying `schema.yml` tests.
 
 ## Troubleshooting
 
@@ -546,13 +610,15 @@ See the "Available Copilot Skills" section above for detailed usage.
 
 ### Tools
 - **Python**: pytest, black, pylint, pyright, mypy
-- **Terraform**: terraform, tflint, terraform-docs
+- **dbt**: dbt-databricks, dbt-spark, dbt-core
+- **Databricks**: Databricks CLI, databricks-connect
 - **Git**: pre-commit hooks, conventional commits
 
 ### Learning
 - [Test-Driven Development](https://martinfowler.com/bliki/TestDrivenDevelopment.html)
 - [Clean Code](https://www.oreilly.com/library/view/clean-code/9780136083238/)
-- [Terraform Best Practices](https://www.terraform.io/docs/cloud/guides/recommended-practices/index.html)
+- [dbt Best Practices](https://docs.getdbt.com/guides/best-practices)
+- [Databricks Documentation](https://docs.databricks.com/)
 
 ## Questions?
 

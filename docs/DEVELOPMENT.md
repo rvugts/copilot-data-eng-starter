@@ -54,7 +54,6 @@ If you don't want to use the script:
 
 ```bash
 pip install -r requirements.txt      # Python dependencies
-npm install                           # If applicable
 ```
 
 ### 3. Understand the Structure
@@ -74,6 +73,8 @@ project/
 │   └── extensions.json              # Recommended extensions
 ├── scripts/
 │   ├── enable-python.sh             # Python environment setup script
+│   ├── append-makefile.py           # Merges Makefile targets
+│   ├── append-precommit.py          # Merges pre-commit checks
 │   └── README.md                    # Script documentation
 ├── requirements.txt                 # Python dependencies
 ├── pyproject.toml                   # Python project configuration
@@ -107,9 +108,9 @@ project/
 - **Python:** Read `.github/instructions/python/python-general.instructions.md`
 - **FastAPI:** Read `.github/instructions/python/python-fastapi.instructions.md`
 - **Django:** Read `.github/instructions/python/python-django.instructions.md`
+- **dbt:** Read `.github/instructions/dbt/dbt-sql.instructions.md`
 - **React/TypeScript:** Read `.github/instructions/javascript/react.instructions.md`
 - **Node.js backend:** Read `.github/instructions/javascript/nodejs.instructions.md`
-- **Terraform/IaC:** Read `.github/instructions/terraform/terraform.instructions.md`
 - **Testing patterns:** Read `.github/instructions/workflows/tdd.instructions.md`
 
 ## Development Workflow
@@ -136,7 +137,7 @@ pytest tests/test_your_feature.py -v
 
 # 6. Refactor for quality (Refactor phase)
 # Use /refactor-python skill in Copilot Chat if applicable
-# See .github/skills/README.md for available skills
+# See .agents/skills/README.md for available skills
 
 # 7. Verify spec alignment
 # Run: python scripts/validate-spec.py (if exists)
@@ -163,7 +164,7 @@ Invoke with `/` in Copilot Chat:
 - `/refactor-python` - Refactor Python code
 - `/run-prompt` - Execute saved prompts
 
-See `.github/skills/README.md` for details.
+See `.agents/skills/README.md` for details.
 
 **Requesting Features from Copilot:**
 
@@ -288,7 +289,7 @@ Having issues with Copilot guidance? See `docs/TROUBLESHOOTING.md` for common pr
 
 ## Additional Resources
 
-- **GitHub Copilot Skills:** `.github/skills/README.md`
+- **Agent Skills:** `.agents/skills/README.md`
 - **Custom Instructions:** `.github/instructions/README.md`
 - **Architecture Decisions:** `docs/adr/`
 - **Spec Template:** `docs/spec.template.md`

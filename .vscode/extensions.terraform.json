@@ -1,8 +1,0 @@
-{
-    "recommendations": [
-        "hashicorp.terraform",
-        "terraform-ls.terraform-ls",
-        "tfsec.tfsec",
-        "ms-vscode.makefile-tools"
-    ]
-}

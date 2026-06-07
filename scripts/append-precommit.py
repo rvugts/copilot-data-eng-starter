@@ -10,7 +10,6 @@ Each language section is wrapped in comment markers to enable safe merging.
 
 Usage:
   python scripts/append-precommit.py python
-  python scripts/append-precommit.py terraform
 """
 
 import os

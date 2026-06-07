@@ -106,12 +106,38 @@ All code should follow these fundamental principles:
 - Commit frequently with clear, descriptive messages following Conventional Commits
 - Keep commits focused on single logical changes
 
+## Data Engineering Stack
+
+This repository is optimised for dbt, Databricks, and Python data engineering:
+
+### dbt
+- Always use `{{ ref() }}` and `{{ source() }}` — never hardcode table names
+- Follow the model layer naming: `stg_` → `int_` → `fct_`/`dim_`/`rpt_`
+- Every new model must have `schema.yml` tests (at minimum `not_null` + `unique` on the primary key)
+- Use CTEs over subqueries; trailing commas; lowercase SQL keywords
+- Use `/using-dbt-for-analytics-engineering` skill for model building
+- Use `/adding-dbt-unit-test` skill for TDD with dbt
+
+### Databricks / PySpark
+- Always use the DataFrame API with `F.col()` — never use RDDs
+- Never `.collect()` on large DataFrames
+- Always use Unity Catalog three-part naming: `catalog.schema.table`
+- Never hardcode credentials — use `dbutils.secrets.get()`
+- Prefer Databricks Asset Bundles (DABs) for job/pipeline deployment
+- Use `/databricks` skill for workspace operations and deployment
+
+### MCP Servers
+Both the Databricks Managed MCP Server and the dbt MCP Server are pre-configured in
+`.vscode/mcp.json`. When active, these give AI agents live access to your workspace.
+See `docs/AI_SETUP.md` for setup instructions.
+
 ## Language/Framework-Specific Rules
 
 For detailed rules specific to your language or framework, see:
 - `.github/instructions/python/` - Python projects
+- `.github/instructions/dbt/` - dbt SQL models and tests
+- `.github/instructions/databricks/` - Databricks / PySpark
 - `.github/instructions/javascript/` - JavaScript/TypeScript projects
-- `.github/instructions/terraform/` - Infrastructure as Code
 - `.github/instructions/workflows/` - Development workflow specifics
 
 The specific instructions will automatically apply based on the file type you're working with.

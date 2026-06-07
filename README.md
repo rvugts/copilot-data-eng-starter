@@ -1,10 +1,10 @@
-# Copilot Dev Starter
+# Copilot Data Engineering Starter
 
-A comprehensive starter template for Copilot-powered development projects. Includes agent rules, skills, templates, and workflows supporting Specification-Driven Development (SDD) and Test-Driven Development (TDD).
+A comprehensive starter template for data engineers using **dbt**, **Databricks**, and **Python** with AI-assisted development. Includes Copilot agent instructions, skills, MCP server configs, and workflows supporting Specification-Driven Development (SDD) and Test-Driven Development (TDD).
 
 This repository provides:
-- GitHub Copilot agent rules and instructions in `.github/`
-- Copilot skills and prompts for secure coding, prompt creation, refactoring, and testing
+- GitHub Copilot agent rules and instructions in `.github/` tuned for dbt, Databricks, and PySpark
+- Copilot skills for secure coding, spec creation, task decomposition, refactoring, and testing
 - Templates and docs supporting Specification-Driven Development (SDD) and Test-Driven Development (TDD)
 - Architecture Decision Records in `docs/adr/`
 
@@ -14,18 +14,20 @@ This repository provides:
 - `README.md` — project overview
 - `CONTRIBUTING.md` — guidelines for extending the template
 - `CODE_OF_CONDUCT.md` — community standards
-- `requirements.txt` — Python dependencies for SDD/TDD development
+- `requirements.txt` — Python dependencies for development and testing
 - `pyproject.toml` — Python project configuration and tool settings
 - `docs/DEVELOPMENT.md` — development workflow and standards
+- `docs/AI_SETUP.md` — **start here** — skills and MCP server setup for dbt and Databricks
 - `docs/specs/spec.md` — active feature specification (when present); archived specs live in `docs/specs/` too
 - `docs/TROUBLESHOOTING.md` — common issues and fixes
 - `docs/VIBE_CODING_GUIDE.md` — contributor guide and Copilot best practices
 - `.github/copilot-instructions.md` — repository-wide Copilot guidance
-- `.github/instructions/` — language-specific instruction files
-- `.github/skills/` — reusable Copilot skills (create-spec, create-tasks, audit-security, refactor-python, generate-prompt, run-prompt)
-- `.github/hooks/pre-commit.template` — pre-commit hook template for Python projects (copy to `.git/hooks/pre-commit`)
+- `.github/instructions/` — always-on instruction files: dbt SQL style, Databricks/PySpark, Python
+- `.agents/skills/` — invocable skills (Agent Skills standard): dbt analytics engineering, dbt unit tests, Databricks, spec/task workflows
+- `.github/hooks/pre-commit.template` — pre-commit hook template for Python projects
 - `.github/ci-templates/` — CI workflow templates (copy and customize)
-- `.vscode/settings.json` — shared VS Code settings for the project
+- `.vscode/mcp.json` — MCP server configuration for Databricks and dbt (template — fill in your credentials)
+- `.vscode/settings.json` — shared VS Code settings
 - `.vscode/extensions.json` — recommended VS Code extensions
 
 ## Getting started
@@ -43,7 +45,7 @@ Use one of these approaches instead:
 Example:
 
 ```bash
-git clone https://github.com/<owner>/copilot-dev-starter.git my-new-project
+git clone https://github.com/<owner>/copilot-data-eng-starter.git my-new-project
 cd my-new-project
 rm -rf .git
 git init
@@ -51,14 +53,55 @@ git init
 
 ### Start using the template
 
-1. **Read the Vibe Coding Guide:** Start with `docs/VIBE_CODING_GUIDE.md` for development philosophy and Copilot best practices
-2. **For Python development:** Run `bash scripts/enable-python.sh`
-3. **For Terraform:** Run `bash scripts/enable-terraform.sh`
-4. Review `.github/copilot-instructions.md`
+1. **Read the AI Setup Guide:** Start with `docs/AI_SETUP.md` to configure MCP servers and skills for dbt and Databricks
+2. **Set up Python:** Run `bash scripts/enable-python.sh`
+3. **Configure MCP servers:** Edit `.vscode/mcp.json` with your Databricks workspace URL and credentials
+4. Review `.github/copilot-instructions.md` — repository-wide Copilot guidance
 5. Read `docs/DEVELOPMENT.md` for workflow and quality standards
-6. Create a spec for your feature using the `create-spec` skill (or manually from `docs/spec.template.md`)
-7. Write tests first, then implement code
-8. Use the Copilot skills in `.github/skills/` as needed
+6. Create a spec for your feature using the `/create-spec` skill
+7. Use the dbt and Databricks skills in `.agents/skills/` as needed
+
+## Stack
+
+This template is purpose-built for data engineering teams working with:
+
+| Tool | Purpose |
+|------|---------|
+| **dbt** | SQL transformation layer — models, tests, documentation |
+| **Databricks** | Unified analytics platform — notebooks, jobs, workflows |
+| **PySpark** | Distributed data processing in Python |
+| **Python** | Orchestration, utilities, custom transforms |
+
+## AI Tooling Included
+
+### Skills (invocable workflows)
+
+| Skill | Invoke | Purpose |
+|-------|--------|---------|
+| `using-dbt-for-analytics-engineering` | `/using-dbt-for-analytics-engineering` | Build models, write SQL, discover data, debug errors |
+| `adding-dbt-unit-test` | `/adding-dbt-unit-test` | TDD for dbt — unit tests before SQL implementation |
+| `databricks` | `/databricks` | CLI auth, Unity Catalog, job deployment, Asset Bundles |
+| `create-spec` | `/create-spec` | Spec-Driven Development — write a feature specification |
+| `create-tasks` | `/create-tasks` | Break a spec into ordered executable tasks |
+| `audit-security` | `/audit-security` | Security audit of the codebase |
+| `refactor-python` | `/refactor-python` | Python refactoring with engineering best practices |
+
+### MCP Servers (live workspace access)
+
+| Server | What it unlocks |
+|--------|----------------|
+| **Databricks Managed MCP** | Query Unity Catalog tables, execute SQL, browse schemas — live from the editor |
+| **dbt MCP** (local) | Run dbt commands, explore lineage, query the Semantic Layer from Copilot Chat |
+
+See `docs/AI_SETUP.md` for full configuration instructions.
+
+### Instruction Files (always-on style enforcement)
+
+| File | Applies to | Enforces |
+|------|-----------|---------|
+| `dbt-sql.instructions.md` | `.sql` files, `schema.yml` | SQL style, model naming, test conventions |
+| `databricks.instructions.md` | Python files | PySpark DataFrame API, Delta patterns, secrets |
+| `python-general.instructions.md` | All `.py` files | Type hints, TDD, security, docstrings |
 
 ## Specification-Driven Development
 
@@ -72,11 +115,11 @@ This template supports SDD — every feature starts with a specification that se
 5. Work through the tasks in order — write tests first (TDD), then implement
 6. Use `/generate-prompt` and `/run-prompt` to delegate individual tasks to Copilot agents
 
-The `create-spec` and `create-tasks` skills support Python, Node.js/TypeScript, Databricks/PySpark/SQL, and other stacks. See `.github/skills/` for details.
+The `create-spec` and `create-tasks` skills support Python, Databricks/PySpark/SQL, dbt, and other stacks. See `.agents/skills/` for details.
 
 ## Contributing
 
-This repository is intended as a starting point for Copilot-powered projects. If you want to extend the template:
+This repository is intended as a starting point for Copilot-powered data engineering projects. If you want to extend the template:
 - Add new `docs/` templates for your workflow
-- Add new Copilot skills in `.github/skills/`
+- Add new skills in `.agents/skills/`
 - Keep the root docs and license up to date

@@ -16,13 +16,13 @@ Custom instructions are files that provide Copilot with additional context and g
 │   ├── python-general.instructions.md       # General Python best practices
 │   ├── python-fastapi.instructions.md       # FastAPI-specific guidelines
 │   └── python-django.instructions.md        # Django-specific guidelines
+├── databricks/
+│   └── databricks.instructions.md           # PySpark, Delta Lake, Unity Catalog standards
+├── dbt/
+│   └── dbt-sql.instructions.md              # dbt & SQL development standards
 ├── javascript/
 │   ├── react.instructions.md                # React/TypeScript best practices
 │   └── nodejs.instructions.md               # Node.js backend best practices
-├── dbt/
-│   └── dbt-sql.instructions.md              # dbt & SQL development standards
-├── terraform/
-│   └── terraform.instructions.md            # Infrastructure as Code best practices
 └── workflows/
     └── tdd.instructions.md                  # Test-Driven Development workflow
 ```
@@ -48,7 +48,7 @@ Each `.instructions.md` file contains:
 | `**/*.py` | All Python files in all directories |
 | `**/*.jsx,**/*.tsx` | JSX and TSX files |
 | `**/fastapi/**/*.py` | Python files in FastAPI directories |
-| `**/*.tf` | All Terraform files |
+| `**/*.sql` | All SQL files (e.g. dbt models) |
 
 ## Available Instructions
 
@@ -118,6 +118,21 @@ Covers:
 - Database practices
 - Security best practices
 
+### Databricks Instructions
+
+#### [databricks.instructions.md](databricks/databricks.instructions.md)
+Applies to: Python files (`**/*.py`), notebooks, job scripts, pipeline source files
+
+Covers:
+- PySpark DataFrame API (always use `F.col()`, never RDDs)
+- Performance anti-patterns (never `.collect()` on large data, no `.toPandas()` at scale)
+- Delta Lake write patterns (overwrite, append, MERGE/UPSERT)
+- Secrets management (`dbutils.secrets.get()` — never hardcode credentials)
+- Databricks widgets for job parameters
+- Unity Catalog three-part naming (`catalog.schema.table`)
+- Partitioning, Z-ORDER, and OPTIMIZE patterns
+- PySpark testing with `chispa`
+
 ### dbt & SQL Instructions
 
 #### [dbt-sql.instructions.md](dbt/dbt-sql.instructions.md)
@@ -136,20 +151,6 @@ Covers:
 - Data types and precision (no `float` for money)
 - PII security and source freshness configuration
 - Anti-patterns to avoid
-
-### Infrastructure Instructions
-
-#### [terraform.instructions.md](terraform/terraform.instructions.md)
-Applies to: All `.tf` files
-
-Covers:
-- Terraform module organization
-- Naming conventions
-- Variables and outputs
-- State management
-- Security best practices
-- Code quality
-- Deployment strategies
 
 ### Workflow Instructions
 

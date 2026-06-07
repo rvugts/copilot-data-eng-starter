@@ -8,7 +8,7 @@ This repo is intended to provide a reusable starter for Copilot-powered workflow
 ## Ways to contribute
 
 - Add new templates or workflow docs under `docs/`
-- Add new Copilot skills under `.github/skills/`
+- Add new skills under `.agents/skills/` (Agent Skills standard — works with GitHub Copilot, Cursor, Claude, and more)
 - Improve existing instructions in `.github/instructions/`
 - Fix bugs or improve sample files in the repository root
 - Add example projects or generator scripts that make the template easier to adopt

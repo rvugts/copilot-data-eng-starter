@@ -8,7 +8,6 @@ idempotency.
 
 Usage:
   python scripts/append-makefile.py python
-  python scripts/append-makefile.py terraform
 """
 
 import re
